@@ -45,11 +45,11 @@ const Home = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8">
                 Request Quote
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 border-white text-white hover:bg-white hover:text-slate-900">
+              <Button variant="outline" size="lg" className="text-lg px-8 border-foreground text-foreground hover:bg-foreground hover:text-background">
                 View Products
               </Button>
             </div>
