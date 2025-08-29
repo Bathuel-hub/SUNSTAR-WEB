@@ -48,29 +48,29 @@ code {
         --radius: 0.5rem;
     }
   .dark {
-        /* Dark Mode - Soft Black, Gold, White */
-        --background: 220 13% 9%; /* Soft black, not too harsh */
-        --foreground: 0 0% 98%;
-        --card: 220 13% 12%; /* Slightly lighter than background */
-        --card-foreground: 0 0% 98%;
-        --popover: 220 13% 12%;
+        /* Dark Mode - True Black, Gold, White */
+        --background: 0 0% 4%; /* True dark background */
+        --foreground: 0 0% 98%; /* White text */
+        --card: 0 0% 8%; /* Dark card background */
+        --card-foreground: 0 0% 98%; /* White text on cards */
+        --popover: 0 0% 8%;
         --popover-foreground: 0 0% 98%;
-        --primary: 45 93% 47%; /* Gold */
-        --primary-foreground: 220 13% 9%;
-        --secondary: 220 13% 18%; /* Soft dark gray */
+        --primary: 45 93% 55%; /* Brighter gold for better contrast */
+        --primary-foreground: 0 0% 9%; /* Dark text on gold */
+        --secondary: 0 0% 14%; /* Dark secondary */
         --secondary-foreground: 0 0% 98%;
-        --muted: 220 13% 15%;
-        --muted-foreground: 0 0% 63.9%;
-        --accent: 45 93% 47%; /* Gold */
-        --accent-foreground: 220 13% 9%;
-        --destructive: 0 62.8% 30.6%;
+        --muted: 0 0% 12%; /* Dark muted background */
+        --muted-foreground: 0 0% 70%; /* Light gray text */
+        --accent: 45 93% 55%; /* Gold accent */
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 62.8% 50%;
         --destructive-foreground: 0 0% 98%;
-        --border: 220 13% 18%;
-        --input: 220 13% 18%;
-        --ring: 45 93% 47%;
-        --chart-1: 45 93% 47%;
+        --border: 0 0% 20%; /* Visible borders in dark mode */
+        --input: 0 0% 12%; /* Dark input fields */
+        --ring: 45 93% 55%;
+        --chart-1: 45 93% 55%;
         --chart-2: 0 0% 98%;
-        --chart-3: 220 13% 35%;
+        --chart-3: 0 0% 35%;
         --chart-4: 45 93% 60%;
         --chart-5: 0 0% 80%;
     }
