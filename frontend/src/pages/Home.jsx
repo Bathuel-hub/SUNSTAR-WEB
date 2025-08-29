@@ -18,10 +18,10 @@ const Home = () => {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-background via-card to-background dark:from-background dark:via-card dark:to-background text-foreground overflow-hidden border-b border-border">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
+          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-10"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-900/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/70 dark:from-background/95 dark:to-background/85" />
         
         <div className="relative container mx-auto px-4 py-20 lg:py-32">
           <div className="max-w-4xl mx-auto text-center">
