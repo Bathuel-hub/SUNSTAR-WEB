@@ -55,7 +55,7 @@ const Header = () => {
           </div>
           <div className="flex items-center gap-4">
             <div className="text-primary font-medium">
-              Licensed by RAKEZ | License: 5034384
+              Licensed by RAKEZ | License: {companyInfo?.license_no || '5034384'}
             </div>
             <ThemeToggle />
           </div>
