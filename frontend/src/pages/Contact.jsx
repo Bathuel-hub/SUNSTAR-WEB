@@ -14,14 +14,18 @@ import { useCompanyInfo } from '../hooks/useApi';
 import { api } from '../services/api';
 
 const Contact = () => {
+  const { data: companyInfo } = useCompanyInfo();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     company: '',
-    inquiryType: '',
+    inquiry_type: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
