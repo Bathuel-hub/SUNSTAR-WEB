@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { ArrowRight, Car, Wrench, Truck, Building2, Star, Quote } from 'lucide-react';
-import { companyInfo, productCategories, heroImage, testimonials } from '../mock';
+import { ArrowRight, Car, Wrench, Truck, Building2, Star, Quote, Loader2 } from 'lucide-react';
+import { useCompanyInfo, useProductCategories, useTestimonials } from '../hooks/useApi';
+import { heroImage } from '../mock';
 
 const Home = () => {
   const quickNavItems = [
