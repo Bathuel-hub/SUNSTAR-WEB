@@ -34,7 +34,7 @@ const Home = () => {
                 <span key={index} className="block">
                   {part.trim()}{index === 0 ? '.' : ''}
                   {index === 1 && (
-                    <span className="text-blue-400"> {part.trim()}.</span>
+                    <span className="text-primary"> {part.trim()}.</span>
                   )}
                 </span>
               ))}
