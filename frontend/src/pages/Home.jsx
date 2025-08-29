@@ -61,7 +61,7 @@ const Home = () => {
             </Badge>
             
             <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              {companyInfo.tagline.split('.').map((part, index) => (
+              {companyInfo?.tagline && companyInfo.tagline.split('.').map((part, index) => (
                 <span key={index} className="block">
                   {part.trim()}{index === 0 ? '.' : ''}
                   {index === 1 && (
