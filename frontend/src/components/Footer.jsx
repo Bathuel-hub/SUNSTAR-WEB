@@ -85,9 +85,9 @@ const Footer = () => {
             <div className="space-y-3 text-sm text-muted-foreground">
               <div>
                 <div className="font-medium text-foreground">License Information</div>
-                <div>License No: {companyInfo.licenseNo}</div>
-                <div>Licensed by: {companyInfo.license.authority}</div>
-                <div>Manager: {companyInfo.manager}</div>
+                <div>License No: {companyInfo?.license_no}</div>
+                <div>Licensed by: {companyInfo?.license?.authority}</div>
+                <div>Manager: {companyInfo?.manager}</div>
               </div>
               
               <div className="pt-4">
