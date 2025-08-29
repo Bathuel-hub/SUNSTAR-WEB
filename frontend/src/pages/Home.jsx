@@ -8,9 +8,9 @@ import { companyInfo, productCategories, heroImage, testimonials } from '../mock
 
 const Home = () => {
   const quickNavItems = [
-    { title: 'Cars', icon: Car, path: '/products', color: 'bg-blue-100 text-blue-700' },
-    { title: 'Spare Parts', icon: Wrench, path: '/products', color: 'bg-emerald-100 text-emerald-700' },
-    { title: 'Machinery', icon: Truck, path: '/products', color: 'bg-amber-100 text-amber-700' }
+    { title: 'Cars', icon: Car, path: '/products', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
+    { title: 'Spare Parts', icon: Wrench, path: '/products', color: 'bg-secondary/10 text-secondary dark:bg-secondary/20' },
+    { title: 'Machinery', icon: Truck, path: '/products', color: 'bg-primary/10 text-primary dark:bg-primary/20' }
   ];
 
   return (
