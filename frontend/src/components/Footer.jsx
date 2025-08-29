@@ -42,17 +42,17 @@ const Footer = () => {
               
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>UAE: {companyInfo.contact.phoneUAE}</span>
+                <span>UAE: {companyInfo?.contact?.phoneUAE}</span>
               </div>
               
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>Ethiopia: {companyInfo.contact.phoneEthiopia}</span>
+                <span>Ethiopia: {companyInfo?.contact?.phoneEthiopia}</span>
               </div>
               
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>{companyInfo.contact.email}</span>
+                <span>{companyInfo?.contact?.email}</span>
               </div>
             </div>
           </div>
