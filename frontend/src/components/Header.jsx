@@ -9,6 +9,7 @@ import { useCompanyInfo } from '../hooks/useApi';
 const Header = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { data: companyInfo } = useCompanyInfo();
 
   const navItems = [
     { name: 'Home', path: '/' },
