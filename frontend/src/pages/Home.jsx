@@ -40,7 +40,7 @@ const Home = () => {
               ))}
             </h1>
             
-            <p className="text-xl lg:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               Your trusted partner for new passenger vehicles, automotive parts, and heavy construction equipment across the Middle East and beyond.
             </p>
             
