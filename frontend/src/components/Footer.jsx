@@ -112,7 +112,7 @@ const Footer = () => {
         <div className="border-t border-border mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
             <div>
-              © {currentYear} {companyInfo.name}. All rights reserved.
+              © {currentYear} {companyInfo?.name || 'Sun Star International FZ-LLC'}. All rights reserved.
             </div>
             <div className="mt-4 md:mt-0">
               Licensed by Ras Al Khaimah Economic Zone (RAKEZ)
