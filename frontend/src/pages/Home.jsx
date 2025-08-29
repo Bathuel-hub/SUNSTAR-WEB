@@ -130,7 +130,7 @@ const Home = () => {
                       </Badge>
                     )}
                   </div>
-                  <Button variant="ghost" className="w-full group-hover:text-blue-600">
+                  <Button variant="ghost" className="w-full group-hover:text-primary">
                     Learn More
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
