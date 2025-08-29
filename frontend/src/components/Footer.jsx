@@ -34,9 +34,9 @@ const Footer = () => {
               <div className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                 <div>
-                  <div>{companyInfo.address.building}</div>
-                  <div>{companyInfo.address.zone}</div>
-                  <div>{companyInfo.address.city}, {companyInfo.address.country}</div>
+                  <div>{companyInfo?.address?.building}</div>
+                  <div>{companyInfo?.address?.zone}</div>
+                  <div>{companyInfo?.address?.city}, {companyInfo?.address?.country}</div>
                 </div>
               </div>
               
