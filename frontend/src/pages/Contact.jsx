@@ -94,7 +94,7 @@ const Contact = () => {
       icon: Mail,
       title: 'Email',
       details: [
-        { label: 'General Inquiries', value: companyInfo.contact.email }
+        { label: 'General Inquiries', value: companyInfo?.contact?.email }
       ],
       action: 'Send Email'
     }
