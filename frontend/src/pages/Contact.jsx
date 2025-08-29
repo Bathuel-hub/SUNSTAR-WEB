@@ -86,7 +86,7 @@ const Contact = () => {
       icon: MessageCircle,
       title: 'WhatsApp',
       details: [
-        { label: 'Quick Response', value: companyInfo.contact.whatsapp }
+        { label: 'Quick Response', value: companyInfo?.contact?.whatsapp }
       ],
       action: 'Chat Now'
     },
