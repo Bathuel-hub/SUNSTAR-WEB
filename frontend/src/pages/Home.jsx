@@ -188,7 +188,7 @@ const Home = () => {
                 <Building2 className="mr-2 h-5 w-5" />
                 Request Quote
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white hover:bg-white hover:text-blue-600">
+              <Button size="lg" variant="outline" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 Contact Us Today
               </Button>
             </div>
