@@ -34,21 +34,42 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock form submission - in real implementation, this would send to backend
-    console.log('Form submitted:', formData);
-    alert('Thank you for your inquiry! We will contact you within 24 hours.');
     
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      inquiryType: '',
-      message: ''
-    });
+    if (!formData.name || !formData.email || !formData.inquiry_type || !formData.message) {
+      setSubmitError('Please fill in all required fields');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
+    try {
+      const response = await api.submitContactInquiry(formData);
+      console.log('Form submitted successfully:', response);
+      
+      setSubmitSuccess(true);
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        inquiry_type: '',
+        message: ''
+      });
+      
+      // Hide success message after 5 seconds
+      setTimeout(() => setSubmitSuccess(false), 5000);
+      
+    } catch (error) {
+      console.error('Form submission failed:', error);
+      setSubmitError(error.response?.data?.message || 'Failed to submit inquiry. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactMethods = [
