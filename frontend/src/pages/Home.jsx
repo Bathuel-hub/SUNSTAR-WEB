@@ -76,7 +76,7 @@ const Home = () => {
                   <div className={`inline-flex p-4 rounded-full ${item.color} mb-6 group-hover:scale-110 transition-transform`}>
                     <item.icon className="h-8 w-8" />
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-800 mb-4">{item.title}</h3>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">{item.title}</h3>
                   <Link to={item.path}>
                     <Button variant="ghost" className="group-hover:text-blue-600">
                       Browse {item.title}
