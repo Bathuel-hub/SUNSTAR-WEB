@@ -27,7 +27,7 @@ const Footer = () => {
             </div>
             
             <p className="text-muted-foreground mb-6 max-w-md">
-              {companyInfo.mission}
+              {companyInfo?.mission || 'To connect global markets with high-quality cars, spare parts, and heavy equipment.'}
             </p>
             
             <div className="space-y-3 text-sm">
