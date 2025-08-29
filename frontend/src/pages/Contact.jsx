@@ -258,9 +258,26 @@ const Contact = () => {
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
+                  {submitError && (
+                    <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-sm">
+                      {submitError}
+                    </div>
+                  )}
+                  
+                  {submitSuccess && (
+                    <div className="p-3 bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md text-green-700 dark:text-green-300 text-sm flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4" />
+                      Thank you for your inquiry! We will contact you within 24 hours.
+                    </div>
+                  )}
+                  
+                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="mr-2 h-4 w-4" />
+                    )}
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </Button>
                 </form>
               </CardContent>
