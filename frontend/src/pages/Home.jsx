@@ -117,7 +117,7 @@ const Home = () => {
                   </div>
                 </div>
                 <CardContent className="p-6">
-                  <p className="text-slate-600 mb-4">{category.description}</p>
+                  <p className="text-muted-foreground mb-4">{category.description}</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {category.products.slice(0, 3).map((product, idx) => (
                       <Badge key={idx} variant="secondary" className="text-xs">
