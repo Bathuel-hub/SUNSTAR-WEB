@@ -5,6 +5,7 @@ import { useCompanyInfo } from '../hooks/useApi';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { data: companyInfo } = useCompanyInfo();
 
   return (
     <footer className="bg-card border-t border-border">
