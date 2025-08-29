@@ -57,7 +57,7 @@ const Home = () => {
         <div className="relative container mx-auto px-4 py-20 lg:py-32">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-6 bg-primary hover:bg-primary/90 text-primary-foreground">
-              Licensed by RAKEZ • License No: {companyInfo.licenseNo}
+              Licensed by RAKEZ • License No: {companyInfo?.license_no}
             </Badge>
             
             <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
