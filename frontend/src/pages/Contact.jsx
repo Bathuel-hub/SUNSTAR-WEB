@@ -229,7 +229,7 @@ const Contact = () => {
                   
                   <div>
                     <Label htmlFor="inquiryType">Inquiry Type *</Label>
-                    <Select value={formData.inquiryType} onValueChange={(value) => handleInputChange('inquiryType', value)}>
+                    <Select value={formData.inquiry_type} onValueChange={(value) => handleInputChange('inquiry_type', value)}>
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select inquiry type" />
                       </SelectTrigger>
