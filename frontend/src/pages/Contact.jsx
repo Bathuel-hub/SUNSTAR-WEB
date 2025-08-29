@@ -8,9 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from '../components/ui/badge';
 import { 
   Phone, Mail, MapPin, Clock, MessageCircle, 
-  Send, Building2, Globe, Headphones
+  Send, Building2, Globe, Headphones, Loader2, CheckCircle
 } from 'lucide-react';
-import { companyInfo } from '../mock';
+import { useCompanyInfo } from '../hooks/useApi';
+import { api } from '../services/api';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
