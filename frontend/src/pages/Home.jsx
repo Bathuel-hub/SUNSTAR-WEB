@@ -25,7 +25,7 @@ const Home = () => {
         
         <div className="relative container mx-auto px-4 py-20 lg:py-32">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 bg-blue-600 hover:bg-blue-700 text-white">
+            <Badge className="mb-6 bg-primary hover:bg-primary/90 text-primary-foreground">
               Licensed by RAKEZ • License No: {companyInfo.licenseNo}
             </Badge>
             
