@@ -42,15 +42,15 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <Phone className="h-3 w-3" />
-              <span>UAE: +971-XXX-XXXXXX</span>
+              <span>UAE: {companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX'}</span>
             </div>
             <div className="flex items-center gap-1">
               <Phone className="h-3 w-3" />
-              <span>Ethiopia: +251-911373857</span>
+              <span>Ethiopia: {companyInfo?.contact?.phoneEthiopia || '+251-911373857'}</span>
             </div>
             <div className="flex items-center gap-1">
               <Mail className="h-3 w-3" />
-              <span>info@sunstarintl.ae</span>
+              <span>{companyInfo?.contact?.email || 'info@sunstarintl.ae'}</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
