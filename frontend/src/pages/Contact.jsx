@@ -296,11 +296,11 @@ const Contact = () => {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <div className="font-semibold text-slate-800 mb-2">{companyInfo.name}</div>
+                      <div className="font-semibold text-slate-800 mb-2">{companyInfo?.name}</div>
                       <div className="text-slate-600 space-y-1">
-                        <div>{companyInfo.address.building}</div>
-                        <div>{companyInfo.address.zone}</div>
-                        <div>{companyInfo.address.city}, {companyInfo.address.country}</div>
+                        <div>{companyInfo?.address?.building}</div>
+                        <div>{companyInfo?.address?.zone}</div>
+                        <div>{companyInfo?.address?.city}, {companyInfo?.address?.country}</div>
                       </div>
                     </div>
                     
