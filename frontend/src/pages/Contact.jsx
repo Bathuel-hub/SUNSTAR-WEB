@@ -77,8 +77,8 @@ const Contact = () => {
       icon: Phone,
       title: 'Phone Numbers',
       details: [
-        { label: 'UAE Office', value: companyInfo.contact.phoneUAE },
-        { label: 'Ethiopia Office', value: companyInfo.contact.phoneEthiopia }
+        { label: 'UAE Office', value: companyInfo?.contact?.phoneUAE },
+        { label: 'Ethiopia Office', value: companyInfo?.contact?.phoneEthiopia }
       ],
       action: 'Call Us'
     },
