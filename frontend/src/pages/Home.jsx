@@ -158,14 +158,14 @@ const Home = () => {
               <Card key={testimonial.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <Quote className="h-8 w-8 text-blue-600 mb-4" />
-                  <p className="text-slate-600 mb-6 italic">"{testimonial.text}"</p>
+                  <p className="text-muted-foreground mb-6 italic">"{testimonial.text}"</p>
                   <div className="flex items-center gap-2 mb-2">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      <Star key={i} className="h-4 w-4 text-secondary fill-current" />
                     ))}
                   </div>
-                  <div className="font-semibold text-slate-800">{testimonial.name}</div>
-                  <div className="text-sm text-slate-600">{testimonial.company}</div>
+                  <div className="font-semibold text-foreground">{testimonial.name}</div>
+                  <div className="text-sm text-muted-foreground">{testimonial.company}</div>
                 </CardContent>
               </Card>
             ))}
