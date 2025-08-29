@@ -185,7 +185,7 @@ const Home = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {testimonials.map((testimonial) => (
+            {testimonials?.map((testimonial) => (
               <Card key={testimonial.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <Quote className="h-8 w-8 text-blue-600 mb-4" />
