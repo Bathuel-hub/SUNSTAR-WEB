@@ -13,7 +13,7 @@ export const companyInfo = {
   },
   contact: {
     phoneUAE: "+971-XXX-XXXXXX",
-    phoneEthiopia: "+251-XXX-XXXXXX", 
+    phoneEthiopia: "+251-911373857", 
     email: "info@sunstarintl.ae",
     whatsapp: "+971-XXX-XXXXXX"
   },
