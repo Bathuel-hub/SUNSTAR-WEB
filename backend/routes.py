@@ -4,8 +4,8 @@ from typing import List, Optional
 from datetime import datetime
 import logging
 
-from .database import get_database
-from .models import (
+from database import get_database
+from models import (
     CompanyInfo, ProductCategory, Product, ContactInquiry, ContactInquiryCreate,
     Testimonial, Advantage, SuccessResponse, ErrorResponse
 )
