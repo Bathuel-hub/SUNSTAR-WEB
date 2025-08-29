@@ -8,11 +8,41 @@ import { useCompanyInfo, useProductCategories, useTestimonials } from '../hooks/
 import { heroImage } from '../mock';
 
 const Home = () => {
+  const { data: companyInfo, loading: companyLoading, error: companyError } = useCompanyInfo();
+  const { data: productCategories, loading: productsLoading, error: productsError } = useProductCategories();
+  const { data: testimonials, loading: testimonialsLoading, error: testimonialsError } = useTestimonials();
+
   const quickNavItems = [
     { title: 'Cars', icon: Car, path: '/products', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
     { title: 'Spare Parts', icon: Wrench, path: '/products', color: 'bg-secondary/10 text-secondary dark:bg-secondary/20' },
     { title: 'Machinery', icon: Truck, path: '/products', color: 'bg-primary/10 text-primary dark:bg-primary/20' }
   ];
+
+  // Loading state
+  if (companyLoading || productsLoading || testimonialsLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="text-lg text-foreground">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (companyError || productsError || testimonialsError) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg text-foreground mb-4">Failed to load data</div>
+          <Button onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
