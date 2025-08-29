@@ -78,7 +78,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-4">{item.title}</h3>
                   <Link to={item.path}>
-                    <Button variant="ghost" className="group-hover:text-blue-600">
+                    <Button variant="ghost" className="group-hover:text-primary">
                       Browse {item.title}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
