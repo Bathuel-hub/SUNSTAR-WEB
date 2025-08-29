@@ -306,7 +306,7 @@ const Contact = () => {
                     
                     <div className="pt-4 border-t">
                       <Badge className="bg-green-100 text-green-700">
-                        Licensed by RAKEZ • License: {companyInfo.licenseNo}
+                        Licensed by RAKEZ • License: {companyInfo?.licenseNo}
                       </Badge>
                     </div>
                   </div>
