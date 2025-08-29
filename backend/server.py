@@ -7,8 +7,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Import our modules
-from .database import connect_to_mongo, close_mongo_connection
-from .routes import router as api_routes
+from database import connect_to_mongo, close_mongo_connection
+from routes import router as api_routes
 
 # Setup logging
 logging.basicConfig(
