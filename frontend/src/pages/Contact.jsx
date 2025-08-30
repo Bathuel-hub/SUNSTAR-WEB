@@ -391,11 +391,24 @@ const Contact = () => {
               For urgent inquiries or immediate support, reach out to us directly via WhatsApp or phone.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="text-lg px-8"
+                onClick={() => contactActions.openWhatsApp(
+                  companyInfo?.contact?.whatsapp || companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX',
+                  'Hello Sun Star International, I need immediate assistance.'
+                )}
+              >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 WhatsApp Us
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white hover:bg-white hover:text-blue-600">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                onClick={() => contactActions.makeCall(companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX')}
+              >
                 <Phone className="mr-2 h-5 w-5" />
                 Call Now
               </Button>
