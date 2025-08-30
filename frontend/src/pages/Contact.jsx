@@ -119,7 +119,7 @@ const Contact = () => {
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
               Contact Sun Star International
             </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Ready to start your next project? Reach out to our team for competitive quotes, product inquiries, or partnership opportunities.
             </p>
           </div>
