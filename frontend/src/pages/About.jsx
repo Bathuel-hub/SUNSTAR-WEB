@@ -86,7 +86,7 @@ const About = () => {
             </div>
             
             <div>
-              <Card className="bg-slate-50 border-0 shadow-lg">
+              <Card className="bg-muted border-0 shadow-lg">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
                     <Shield className="h-16 w-16 text-blue-600 mx-auto mb-4" />
