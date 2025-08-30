@@ -5,6 +5,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { ArrowRight, Car, Wrench, Truck, Building2, Star, Quote, Loader2 } from 'lucide-react';
 import { useCompanyInfo, useProductCategories, useTestimonials } from '../hooks/useApi';
+import { contactActions } from '../utils/contactUtils';
 import { heroImage } from '../mock';
 
 const Home = () => {
