@@ -89,7 +89,7 @@ const Products = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {productCategories.map((category) => {
+            {productCategories?.map((category) => {
               const IconComponent = categoryIcons[category.id];
               return (
                 <Card key={category.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
