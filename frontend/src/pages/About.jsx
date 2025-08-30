@@ -169,10 +169,10 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-6">
                 Strategic Location in UAE
               </h2>
-              <p className="text-lg text-slate-600 mb-6">
+              <p className="text-lg text-muted-foreground mb-6">
                 Located in the Al Hulaila Industrial Zone within Ras Al Khaimah Economic Zone, our strategic position provides us with excellent access to global shipping routes and trade networks.
               </p>
               
