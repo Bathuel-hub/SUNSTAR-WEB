@@ -52,7 +52,7 @@ const WhyChooseUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-20">
         <div className="container mx-auto px-4">
