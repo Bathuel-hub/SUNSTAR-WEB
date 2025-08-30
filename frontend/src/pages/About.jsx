@@ -205,21 +205,21 @@ const About = () => {
             
             <div>
               <Card className="overflow-hidden">
-                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-8">
+                <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-8">
                   <h3 className="text-xl font-bold mb-6">Our Address</h3>
-                  <div className="space-y-3 text-blue-100">
-                    <div>{companyInfo.address.building}</div>
-                    <div>{companyInfo.address.zone}</div>
-                    <div>{companyInfo.address.city}</div>
-                    <div>{companyInfo.address.country}</div>
+                  <div className="space-y-3 opacity-90">
+                    <div>{companyInfo?.address?.building}</div>
+                    <div>{companyInfo?.address?.zone}</div>
+                    <div>{companyInfo?.address?.city}</div>
+                    <div>{companyInfo?.address?.country}</div>
                   </div>
                 </div>
-                <CardContent className="p-8 bg-slate-50">
+                <CardContent className="p-8 bg-muted">
                   <div className="text-center">
-                    <div className="text-sm text-slate-600 mb-4">
+                    <div className="text-sm text-muted-foreground mb-4">
                       Operating under RAKEZ jurisdiction since August 2025
                     </div>
-                    <Badge className="bg-green-100 text-green-700">
+                    <Badge className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
                       Fully Licensed & Compliant
                     </Badge>
                   </div>
