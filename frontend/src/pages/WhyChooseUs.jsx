@@ -7,35 +7,13 @@ import {
   CheckCircle, Star, Users, HeadphonesIcon,
   MapPin, FileText, Zap
 } from 'lucide-react';
-import { whyChooseUs, companyInfo, testimonials } from '../mock';
+import { useAdvantages, useTestimonials, useCompanyInfo } from '../hooks/useApi';
+import { contactActions } from '../utils/contactUtils';
 
 const WhyChooseUs = () => {
-  const advantages = [
-    {
-      icon: Shield,
-      title: 'RAKEZ Licensed & Regulated',
-      description: 'Fully licensed by Ras Al Khaimah Economic Zone with transparent business operations and legal compliance.',
-      details: ['License No: 5034384', 'Full regulatory compliance', 'Transparent business practices']
-    },
-    {
-      icon: Globe,
-      title: 'Global Export Network',
-      description: 'Established shipping partnerships and logistics networks covering major international markets.',
-      details: ['25+ countries served', 'Major shipping lines partnership', 'Full tracking & insurance']
-    },
-    {
-      icon: Package,
-      title: 'Comprehensive Product Range',
-      description: 'One-stop solution for all automotive and construction equipment needs with extensive inventory.',
-      details: ['Passenger vehicles', 'Auto spare parts', 'Heavy machinery', 'Construction equipment']
-    },
-    {
-      icon: Truck,
-      title: 'Reliable Supply Chain',
-      description: 'Trusted supplier relationships and efficient logistics ensure consistent availability and fast delivery.',
-      details: ['Direct manufacturer relationships', 'Strategic inventory management', 'Express shipping options']
-    }
-  ];
+  const { data: advantages } = useAdvantages();
+  const { data: testimonials } = useTestimonials();
+  const { data: companyInfo } = useCompanyInfo();
 
   const certifications = [
     { title: 'RAKEZ Authorized', icon: Award, description: 'Official trading license from UAE authorities' },
@@ -57,13 +35,13 @@ const WhyChooseUs = () => {
       <section className="bg-gradient-to-r from-card to-background text-foreground py-20 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 bg-blue-600 hover:bg-blue-700 text-white">
+            <Badge className="mb-6 bg-primary hover:bg-primary/90 text-primary-foreground">
               Your Trusted Trading Partner
             </Badge>
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
               Why Choose Sun Star International?
             </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover what makes us the preferred choice for automotive and construction equipment trading across the Middle East and beyond.
             </p>
           </div>
@@ -71,16 +49,16 @@ const WhyChooseUs = () => {
       </section>
 
       {/* Key Statistics */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center group">
-                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                  <stat.icon className="h-8 w-8 text-blue-600 group-hover:text-white" />
+                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <stat.icon className="h-8 w-8 text-primary group-hover:text-primary-foreground" />
                 </div>
-                <div className="text-3xl font-bold text-slate-800 mb-2">{stat.number}</div>
-                <div className="text-slate-600 font-medium">{stat.label}</div>
+                <div className="text-3xl font-bold text-foreground mb-2">{stat.number}</div>
+                <div className="text-muted-foreground font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -88,40 +66,32 @@ const WhyChooseUs = () => {
       </section>
 
       {/* Main Advantages */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Our Competitive Advantages
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               We combine legal compliance, global reach, and operational excellence to deliver unmatched value to our clients.
             </p>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {advantages.map((advantage, index) => (
+            {advantages?.map((advantage, index) => (
               <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="p-8">
                   <div className="flex items-start gap-4">
-                    <div className="bg-blue-100 p-3 rounded-lg group-hover:bg-blue-600 transition-colors">
-                      <advantage.icon className="h-8 w-8 text-blue-600 group-hover:text-white" />
+                    <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary transition-colors">
+                      <Shield className="h-8 w-8 text-primary group-hover:text-primary-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-slate-800 mb-3">
+                      <h3 className="text-xl font-bold text-foreground mb-3">
                         {advantage.title}
                       </h3>
-                      <p className="text-slate-600 mb-4">
+                      <p className="text-muted-foreground mb-4">
                         {advantage.description}
                       </p>
-                      <ul className="space-y-2">
-                        {advantage.details.map((detail, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
-                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                            {detail}
-                          </li>
-                        ))}
-                      </ul>
                     </div>
                   </div>
                 </CardContent>
@@ -132,13 +102,13 @@ const WhyChooseUs = () => {
       </section>
 
       {/* Certifications & Quality */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Certifications & Quality Assurance
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               Our commitment to excellence is backed by official certifications and quality standards
             </p>
           </div>
@@ -147,11 +117,11 @@ const WhyChooseUs = () => {
             {certifications.map((cert, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="p-6">
-                  <div className="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <cert.icon className="h-8 w-8 text-emerald-600" />
+                  <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <cert.icon className="h-8 w-8 text-secondary" />
                   </div>
-                  <h3 className="font-bold text-slate-800 mb-2">{cert.title}</h3>
-                  <p className="text-sm text-slate-600">{cert.description}</p>
+                  <h3 className="font-bold text-foreground mb-2">{cert.title}</h3>
+                  <p className="text-sm text-muted-foreground">{cert.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -160,13 +130,13 @@ const WhyChooseUs = () => {
       </section>
 
       {/* Process & Timeline */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Our Streamlined Process
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               From inquiry to delivery - experience our efficient trading process
             </p>
           </div>
@@ -181,17 +151,17 @@ const WhyChooseUs = () => {
               ].map((process, index) => (
                 <div key={index} className="text-center relative">
                   {index < 3 && (
-                    <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -translate-x-1/2 z-0" />
+                    <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-border -translate-x-1/2 z-0" />
                   )}
                   <div className="relative z-10">
-                    <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
+                    <div className="bg-primary text-primary-foreground w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
                       {process.step}
                     </div>
-                    <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 -mt-8">
-                      <process.icon className="h-6 w-6 text-blue-600" />
+                    <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 -mt-8">
+                      <process.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="font-bold text-slate-800 mb-2">{process.title}</h3>
-                    <p className="text-sm text-slate-600">{process.desc}</p>
+                    <h3 className="font-bold text-foreground mb-2">{process.title}</h3>
+                    <p className="text-sm text-muted-foreground">{process.desc}</p>
                   </div>
                 </div>
               ))}
@@ -201,30 +171,30 @@ const WhyChooseUs = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Client Success Stories
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               See what our satisfied clients say about working with us
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {testimonials.map((testimonial) => (
+            {testimonials?.map((testimonial) => (
               <Card key={testimonial.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      <Star key={i} className="h-4 w-4 text-secondary fill-current" />
                     ))}
                   </div>
-                  <p className="text-slate-600 mb-6 italic">"{testimonial.text}"</p>
+                  <p className="text-muted-foreground mb-6 italic">"{testimonial.text}"</p>
                   <div>
-                    <div className="font-semibold text-slate-800">{testimonial.name}</div>
-                    <div className="text-sm text-slate-600">{testimonial.company}</div>
+                    <div className="font-semibold text-foreground">{testimonial.name}</div>
+                    <div className="text-sm text-muted-foreground">{testimonial.company}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -234,7 +204,7 @@ const WhyChooseUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+      <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl lg:text-4xl font-bold mb-6">
@@ -244,10 +214,23 @@ const WhyChooseUs = () => {
               Join hundreds of satisfied clients who trust us for their automotive and construction equipment needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="text-lg px-8"
+                onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae')}
+              >
                 Start Your Order
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white hover:bg-white hover:text-blue-600">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                onClick={() => contactActions.openWhatsApp(
+                  companyInfo?.contact?.whatsapp || companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX',
+                  'Hello Sun Star International, I would like to schedule a consultation to discuss my equipment needs.'
+                )}
+              >
                 Schedule Consultation
               </Button>
             </div>

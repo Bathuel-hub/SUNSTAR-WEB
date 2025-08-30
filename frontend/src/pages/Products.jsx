@@ -3,7 +3,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Car, Wrench, Cog, Truck, ArrowRight, Phone, Mail } from 'lucide-react';
+import { Car, Wrench, Cog, Truck, ArrowRight, Phone, Mail, Loader2 } from 'lucide-react';
 import { useProductCategories, useCompanyInfo } from '../hooks/useApi';
 import { contactActions } from '../utils/contactUtils';
 
@@ -16,7 +16,7 @@ const Products = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <span className="text-lg text-foreground">Loading...</span>
         </div>
       </div>
@@ -69,7 +69,7 @@ const Products = () => {
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
               Products & Services
             </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               From passenger vehicles to heavy construction machinery, discover our extensive catalog of high-quality products and professional trading services.
             </p>
           </div>
@@ -77,20 +77,20 @@ const Products = () => {
       </section>
 
       {/* Product Categories Overview */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Our Product Categories
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               Explore our comprehensive range of automotive and construction solutions
             </p>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {productCategories?.map((category) => {
-              const IconComponent = categoryIcons[category.id];
+              const IconComponent = categoryIcons[category.id] || Car;
               return (
                 <Card key={category.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
                   <div className="relative h-64 overflow-hidden">
@@ -110,16 +110,19 @@ const Products = () => {
                     </div>
                   </div>
                   <CardContent className="p-6">
-                    <p className="text-slate-600 mb-4">{category.description}</p>
+                    <p className="text-muted-foreground mb-4">{category.description}</p>
                     <div className="flex flex-wrap gap-2 mb-6">
-                      {category.products.map((product, idx) => (
+                      {category.products?.map((product, idx) => (
                         <Badge key={idx} variant="secondary" className="text-xs">
                           {product}
                         </Badge>
                       ))}
                     </div>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                      View Products
+                    <Button 
+                      className="w-full bg-primary hover:bg-primary/90"
+                      onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae', category.name)}
+                    >
+                      Request Quote
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </CardContent>
@@ -131,26 +134,26 @@ const Products = () => {
       </section>
 
       {/* Detailed Product Catalog */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Product Catalog
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               Browse our current inventory and available products
             </p>
           </div>
           
           <Tabs defaultValue="1" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 bg-white shadow-sm mb-8">
-              {productCategories.map((category) => {
-                const IconComponent = categoryIcons[category.id];
+            <TabsList className="grid w-full grid-cols-4 bg-card shadow-sm mb-8">
+              {productCategories?.map((category) => {
+                const IconComponent = categoryIcons[category.id] || Car;
                 return (
                   <TabsTrigger 
                     key={category.id} 
                     value={category.id.toString()}
-                    className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600"
+                    className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
                   >
                     <IconComponent className="h-5 w-5" />
                     <span className="text-xs font-medium">{category.name.split(' ')[0]}</span>
@@ -159,15 +162,15 @@ const Products = () => {
               })}
             </TabsList>
 
-            {productCategories.map((category) => (
+            {productCategories?.map((category) => (
               <TabsContent key={category.id} value={category.id.toString()}>
                 <Card>
                   <CardContent className="p-8">
                     <div className="mb-8 text-center">
-                      <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                      <h3 className="text-2xl font-bold text-foreground mb-4">
                         {category.name}
                       </h3>
-                      <p className="text-slate-600 max-w-2xl mx-auto">
+                      <p className="text-muted-foreground max-w-2xl mx-auto">
                         {category.description}
                       </p>
                     </div>
@@ -177,15 +180,22 @@ const Products = () => {
                         <Card key={index} className="hover:shadow-md transition-shadow">
                           <CardContent className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                              <h4 className="font-semibold text-slate-800">{product.name}</h4>
-                              <Badge variant="outline" className="text-blue-600 border-blue-600">
+                              <h4 className="font-semibold text-foreground">{product.name}</h4>
+                              <Badge variant="outline" className="text-primary border-primary">
                                 Available
                               </Badge>
                             </div>
-                            <p className="text-sm text-slate-600 mb-4">{product.specs}</p>
+                            <p className="text-sm text-muted-foreground mb-4">{product.specs}</p>
                             <div className="flex justify-between items-center">
-                              <div className="font-semibold text-slate-800">{product.price}</div>
-                              <Button size="sm" variant="outline">
+                              <div className="font-semibold text-foreground">{product.price}</div>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => contactActions.requestQuote(
+                                  companyInfo?.contact?.email || 'info@sunstarintl.ae', 
+                                  `${category.name} - ${product.name}`
+                                )}
+                              >
                                 Get Quote
                               </Button>
                             </div>
@@ -202,13 +212,13 @@ const Products = () => {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               Our Trading Services
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-muted-foreground">
               Comprehensive services to support your business needs
             </p>
           </div>
@@ -216,40 +226,59 @@ const Products = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardContent className="p-8">
-                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Truck className="h-8 w-8 text-blue-600" />
+                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Truck className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-4">Global Shipping</h3>
-                <p className="text-slate-600 mb-6">
+                <h3 className="text-xl font-bold text-foreground mb-4">Global Shipping</h3>
+                <p className="text-muted-foreground mb-6">
                   Reliable shipping and logistics solutions to deliver your orders worldwide with full tracking and insurance.
                 </p>
-                <Button variant="outline">Learn More</Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => contactActions.contactUs(companyInfo?.contact?.email || 'info@sunstarintl.ae')}
+                >
+                  Learn More
+                </Button>
               </CardContent>
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardContent className="p-8">
-                <div className="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Phone className="h-8 w-8 text-emerald-600" />
+                <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Phone className="h-8 w-8 text-secondary" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-4">Custom Sourcing</h3>
-                <p className="text-slate-600 mb-6">
+                <h3 className="text-xl font-bold text-foreground mb-4">Custom Sourcing</h3>
+                <p className="text-muted-foreground mb-6">
                   Can't find what you're looking for? Our team can source specific vehicles, parts, or equipment to meet your requirements.
                 </p>
-                <Button variant="outline">Contact Us</Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => contactActions.makeCall(companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX')}
+                >
+                  Contact Us
+                </Button>
               </CardContent>
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardContent className="p-8">
-                <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Mail className="h-8 w-8 text-amber-600" />
+                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Mail className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-4">Technical Support</h3>
-                <p className="text-slate-600 mb-6">
+                <h3 className="text-xl font-bold text-foreground mb-4">Technical Support</h3>
+                <p className="text-muted-foreground mb-6">
                   Expert technical advice and support to help you choose the right products for your specific applications.
                 </p>
-                <Button variant="outline">Get Support</Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => contactActions.sendEmail(
+                    companyInfo?.contact?.email || 'info@sunstarintl.ae',
+                    'Technical Support Request',
+                    'Hello, I need technical support for...'
+                  )}
+                >
+                  Get Support
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -257,7 +286,7 @@ const Products = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+      <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold mb-6">
             Need a Custom Quote?
@@ -266,10 +295,23 @@ const Products = () => {
             Get competitive pricing on bulk orders or custom specifications. Our team is ready to help you find the perfect solution.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8">
+            <Button 
+              size="lg" 
+              variant="secondary" 
+              className="text-lg px-8"
+              onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae', 'Bulk Order')}
+            >
               Request Bulk Quote
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white hover:bg-white hover:text-blue-600">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              onClick={() => contactActions.openWhatsApp(
+                companyInfo?.contact?.whatsapp || companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX',
+                'Hello Sun Star International, I would like to speak with your sales team about bulk orders.'
+              )}
+            >
               Contact Sales Team
             </Button>
           </div>
