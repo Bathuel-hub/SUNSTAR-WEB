@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useCompanyInfo } from '../hooks/useApi';
 import { api } from '../services/api';
+import { contactActions } from '../utils/contactUtils';
 
 const Contact = () => {
   const { data: companyInfo } = useCompanyInfo();
