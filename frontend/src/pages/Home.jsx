@@ -224,13 +224,20 @@ const Home = () => {
               Get in touch today for competitive quotes and reliable service across all our product categories.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="text-lg px-8"
+                onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae')}
+              >
                 <Building2 className="mr-2 h-5 w-5" />
                 Request Quote
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                Contact Us Today
-              </Button>
+              <Link to="/contact">
+                <Button size="lg" variant="outline" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                  Contact Us Today
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
