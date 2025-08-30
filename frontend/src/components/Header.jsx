@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { Menu, Star, Phone, Mail } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useCompanyInfo } from '../hooks/useApi';
+import { contactActions } from '../utils/contactUtils';
 
 const Header = () => {
   const location = useLocation();
