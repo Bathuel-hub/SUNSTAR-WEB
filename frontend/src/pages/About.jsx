@@ -146,13 +146,13 @@ const About = () => {
             {values.map((value, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="p-8">
-                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <value.icon className="h-8 w-8 text-blue-600" />
+                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <value.icon className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-4">
+                  <h3 className="text-xl font-bold text-foreground mb-4">
                     {value.title}
                   </h3>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     {value.description}
                   </p>
                 </CardContent>
