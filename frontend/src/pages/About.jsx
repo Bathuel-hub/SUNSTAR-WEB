@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Shield, Target, Award, Users, Globe2, Truck, CheckCircle } from 'lucide-react';
-import { companyInfo } from '../mock';
+import { useCompanyInfo } from '../hooks/useApi';
 
 const About = () => {
   const values = [
