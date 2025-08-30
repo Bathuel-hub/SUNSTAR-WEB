@@ -77,13 +77,19 @@ const Home = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-lg px-8"
+                onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae')}
+              >
                 Request Quote
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 border-foreground text-foreground hover:bg-foreground hover:text-background">
-                View Products
-              </Button>
+              <Link to="/products">
+                <Button variant="outline" size="lg" className="text-lg px-8 border-foreground text-foreground hover:bg-foreground hover:text-background">
+                  View Products
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
