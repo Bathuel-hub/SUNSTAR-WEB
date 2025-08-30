@@ -130,10 +130,20 @@ const Header = () => {
                     ))}
                   </nav>
                   <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                    <Button variant="outline">Request Quote</Button>
-                    <Button className="bg-primary hover:bg-primary/90">
-                      Contact Us
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae');
+                        setIsOpen(false);
+                      }}
+                    >
+                      Request Quote
                     </Button>
+                    <Link to="/contact" onClick={() => setIsOpen(false)}>
+                      <Button className="bg-primary hover:bg-primary/90 w-full">
+                        Contact Us
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </SheetContent>
