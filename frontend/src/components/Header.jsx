@@ -87,12 +87,18 @@ const Header = () => {
 
           {/* Contact CTA - Desktop */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae')}
+            >
               Request Quote
             </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary/90">
-              Contact Us
-            </Button>
+            <Link to="/contact">
+              <Button size="sm" className="bg-primary hover:bg-primary/90">
+                Contact Us
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu */}
