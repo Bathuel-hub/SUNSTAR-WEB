@@ -4,7 +4,8 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Car, Wrench, Cog, Truck, ArrowRight, Phone, Mail } from 'lucide-react';
-import { productCategories } from '../mock';
+import { useProductCategories, useCompanyInfo } from '../hooks/useApi';
+import { contactActions } from '../utils/contactUtils';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
