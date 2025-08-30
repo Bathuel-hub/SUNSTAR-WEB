@@ -43,7 +43,7 @@ const About = () => {
       <section className="bg-gradient-to-r from-card to-background text-foreground py-20 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 bg-blue-600 hover:bg-blue-700 text-white">
+            <Badge className="mb-6 bg-primary hover:bg-primary/90 text-primary-foreground">
               RAKEZ Licensed • Established 2025
             </Badge>
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
