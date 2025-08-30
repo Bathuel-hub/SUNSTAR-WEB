@@ -102,14 +102,14 @@ const About = () => {
                   
                   <div className="space-y-4">
                     <div className="text-center">
-                      <div className="font-semibold text-slate-800">Manager</div>
-                      <div className="text-slate-600">{companyInfo.manager}</div>
+                      <div className="font-semibold text-foreground">Manager</div>
+                      <div className="text-muted-foreground">{companyInfo?.manager}</div>
                     </div>
                     
                     <div className="text-center">
-                      <div className="font-semibold text-slate-800">License Period</div>
-                      <div className="text-slate-600">
-                        {companyInfo.license.issueDate} to {companyInfo.license.expiryDate}
+                      <div className="font-semibold text-foreground">License Period</div>
+                      <div className="text-muted-foreground">
+                        {companyInfo?.license?.issueDate} to {companyInfo?.license?.expiryDate}
                       </div>
                     </div>
                     
