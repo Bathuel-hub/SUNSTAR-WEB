@@ -89,11 +89,11 @@ const About = () => {
               <Card className="bg-muted border-0 shadow-lg">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
-                    <Shield className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">
+                    <Shield className="h-16 w-16 text-primary mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-foreground mb-2">
                       RAKEZ Licensed Company
                     </h3>
-                    <Badge variant="outline" className="text-blue-600 border-blue-600">
+                    <Badge variant="outline" className="text-primary border-primary">
                       License No: {companyInfo.licenseNo}
                     </Badge>
                   </div>
