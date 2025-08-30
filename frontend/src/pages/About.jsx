@@ -61,13 +61,13 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-6">
                 Licensed Excellence in Trading
               </h2>
-              <p className="text-lg text-slate-600 mb-6">
+              <p className="text-lg text-muted-foreground mb-6">
                 Sun Star International FZ-LLC is a fully licensed trading company operating from the prestigious Ras Al Khaimah Economic Zone (RAKEZ) in the United Arab Emirates. We specialize in connecting global markets with high-quality automotive vehicles, spare parts, and heavy construction equipment.
               </p>
-              <p className="text-lg text-slate-600 mb-8">
+              <p className="text-lg text-muted-foreground mb-8">
                 Our mission is to bridge the gap between manufacturers and end-users by providing reliable, cost-effective trading solutions that meet the diverse needs of our international clientele.
               </p>
               
