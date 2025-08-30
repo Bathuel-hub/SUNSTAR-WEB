@@ -74,10 +74,10 @@ const About = () => {
               <div className="grid grid-cols-2 gap-6">
                 {achievements.map((achievement, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                    <div className="text-3xl font-bold text-primary mb-2">
                       {achievement.metric}
                     </div>
-                    <div className="text-sm text-slate-600 font-medium">
+                    <div className="text-sm text-muted-foreground font-medium">
                       {achievement.label}
                     </div>
                   </div>
