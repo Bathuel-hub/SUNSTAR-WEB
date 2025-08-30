@@ -178,26 +178,26 @@ const About = () => {
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Globe2 className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <Globe2 className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
-                    <div className="font-semibold text-slate-800">Global Trade Access</div>
-                    <div className="text-slate-600">Direct access to major shipping lanes and international markets</div>
+                    <div className="font-semibold text-foreground">Global Trade Access</div>
+                    <div className="text-muted-foreground">Direct access to major shipping lanes and international markets</div>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <Truck className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <Truck className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
-                    <div className="font-semibold text-slate-800">Efficient Logistics</div>
-                    <div className="text-slate-600">State-of-the-art facilities for storage and distribution</div>
+                    <div className="font-semibold text-foreground">Efficient Logistics</div>
+                    <div className="text-muted-foreground">State-of-the-art facilities for storage and distribution</div>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <Users className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <Users className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
-                    <div className="font-semibold text-slate-800">Professional Team</div>
-                    <div className="text-slate-600">Experienced professionals managing all aspects of trading operations</div>
+                    <div className="font-semibold text-foreground">Professional Team</div>
+                    <div className="text-muted-foreground">Experienced professionals managing all aspects of trading operations</div>
                   </div>
                 </div>
               </div>
