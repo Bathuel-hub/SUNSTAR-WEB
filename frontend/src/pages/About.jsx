@@ -49,7 +49,7 @@ const About = () => {
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
               About Sun Star International
             </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               A professionally licensed trading company specializing in automotive and construction equipment solutions across the Middle East and global markets.
             </p>
           </div>
