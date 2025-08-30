@@ -96,7 +96,7 @@ const About = () => {
                       RAKEZ Licensed Company
                     </h3>
                     <Badge variant="outline" className="text-primary border-primary">
-                      License No: {companyInfo.licenseNo}
+                      License No: {companyInfo?.license_no}
                     </Badge>
                   </div>
                   
