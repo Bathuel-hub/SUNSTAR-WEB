@@ -369,7 +369,14 @@ const Contact = () => {
                       <div className="text-sm">Ras Al Khaimah, UAE</div>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full mt-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4"
+                    onClick={() => {
+                      const address = encodeURIComponent(`${companyInfo?.address?.building}, ${companyInfo?.address?.zone}, ${companyInfo?.address?.city}, ${companyInfo?.address?.country}` || 'Al Hulaila Industrial Zone, Ras Al Khaimah, UAE');
+                      window.open(`https://maps.google.com/maps?q=${address}`, '_blank');
+                    }}
+                  >
                     <Globe className="mr-2 h-4 w-4" />
                     Open in Google Maps
                   </Button>
