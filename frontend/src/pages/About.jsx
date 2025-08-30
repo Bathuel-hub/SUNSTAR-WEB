@@ -5,6 +5,8 @@ import { Shield, Target, Award, Users, Globe2, Truck, CheckCircle } from 'lucide
 import { useCompanyInfo } from '../hooks/useApi';
 
 const About = () => {
+  const { data: companyInfo } = useCompanyInfo();
+
   const values = [
     {
       icon: Shield,
