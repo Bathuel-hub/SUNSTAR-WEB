@@ -94,15 +94,27 @@ const Footer = () => {
               <div className="pt-4">
                 <div className="font-medium text-foreground mb-2">Follow Us</div>
                 <div className="flex gap-3">
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                  <button 
+                    onClick={() => window.open('https://linkedin.com/company/sun-star-international', '_blank')}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    aria-label="LinkedIn"
+                  >
                     <Linkedin className="h-5 w-5" />
-                  </a>
-                  <a href="#" className="text-muted-foreground hover:text-secondary transition-colors">
+                  </button>
+                  <button 
+                    onClick={() => contactActions.openWhatsApp(companyInfo?.contact?.whatsapp || companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX', 'Hello Sun Star International, I am interested in your services.')}
+                    className="text-muted-foreground hover:text-secondary transition-colors"
+                    aria-label="WhatsApp"
+                  >
                     <MessageCircle className="h-5 w-5" />
-                  </a>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                  </button>
+                  <button 
+                    onClick={() => window.open('https://facebook.com/sunstarinternational', '_blank')}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    aria-label="Facebook"
+                  >
                     <Facebook className="h-5 w-5" />
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
