@@ -179,7 +179,7 @@ const Contact = () => {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Contact Form */}
