@@ -41,17 +41,17 @@ const Footer = () => {
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors" onClick={() => contactActions.makeCall(companyInfo?.contact?.phoneUAE || '+971-XXX-XXXXXX')}>
                 <Phone className="h-4 w-4 text-primary" />
                 <span>UAE: {companyInfo?.contact?.phoneUAE}</span>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors" onClick={() => contactActions.makeCall(companyInfo?.contact?.phoneEthiopia || '+251-911373857')}>
                 <Phone className="h-4 w-4 text-primary" />
                 <span>Ethiopia: {companyInfo?.contact?.phoneEthiopia}</span>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors" onClick={() => contactActions.sendEmail(companyInfo?.contact?.email || 'info@sunstarintl.ae')}>
                 <Mail className="h-4 w-4 text-primary" />
                 <span>{companyInfo?.contact?.email}</span>
               </div>
