@@ -142,21 +142,33 @@ const Contact = () => {
             {contactMethods.map((method, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="p-8">
-                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <method.icon className="h-8 w-8 text-blue-600" />
+                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <method.icon className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-4">
+                  <h3 className="text-xl font-bold text-foreground mb-4">
                     {method.title}
                   </h3>
                   <div className="space-y-3 mb-6">
                     {method.details.map((detail, idx) => (
                       <div key={idx}>
-                        <div className="text-sm text-slate-600 font-medium">{detail.label}</div>
-                        <div className="font-semibold text-slate-800">{detail.value}</div>
+                        <div className="text-sm text-muted-foreground font-medium">{detail.label}</div>
+                        <div className="font-semibold text-foreground">{detail.value}</div>
                       </div>
                     ))}
                   </div>
-                  <Button variant="outline" className="w-full">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      if (method.title === 'Phone Numbers') {
+                        contactActions.makeCall(method.details[0].value);
+                      } else if (method.title === 'WhatsApp') {
+                        contactActions.openWhatsApp(method.details[0].value, 'Hello Sun Star International, I am interested in your services.');
+                      } else if (method.title === 'Email') {
+                        contactActions.sendEmail(method.details[0].value);
+                      }
+                    }}
+                  >
                     {method.action}
                   </Button>
                 </CardContent>
