@@ -7,8 +7,8 @@ export const companyInfo = {
   tagline: "Driving Growth. Powering Construction.",
   address: {
     building: "VVIPR1315, Compass building - Al Hulaila",
-    zone: "AL Hulaila Industrial Zone-FZ",
-    city: "Ras Al Khaimah",
+    zone: "AL Hulaila Industrial Zone-FZ", 
+    city: "RAK UAE",
     country: "United Arab Emirates"
   },
   contact: {
