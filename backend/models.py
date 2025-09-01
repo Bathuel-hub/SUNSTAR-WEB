@@ -87,6 +87,49 @@ class Advantage(BaseModel):
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+# Customer Rating Models
+class CustomerRating(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: EmailStr
+    company: Optional[str] = None
+    rating: int = Field(ge=1, le=5)
+    experience: str
+    service_category: str = "general"  # general, vehicles, parts, machinery
+    would_recommend: bool = True
+    ip_address: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class CustomerRatingCreate(BaseModel):
+    name: str
+    email: EmailStr
+    company: Optional[str] = None
+    rating: int = Field(ge=1, le=5)
+    experience: str
+    service_category: str = "general"
+    would_recommend: bool = True
+
+# Product Management Models (Admin)
+class ProductItem(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    category_id: str
+    name: str
+    description: str
+    price: str
+    image_url: Optional[str] = None
+    is_featured: bool = False
+    is_available: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ProductItemCreate(BaseModel):
+    category_id: str
+    name: str
+    description: str
+    price: str
+    is_featured: bool = False
+    is_available: bool = True
+
 # Response Models
 class SuccessResponse(BaseModel):
     success: bool = True
