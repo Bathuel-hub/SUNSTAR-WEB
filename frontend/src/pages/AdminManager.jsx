@@ -201,123 +201,182 @@ const AdminManager = () => {
           </CardContent>
         </Card>
 
-        {/* Add/Edit Form */}
+        {/* Simple Add/Edit Form */}
         {showAddForm && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                {editingProduct ? 'Edit Product' : 'Add New Product'}
-                <Button variant="ghost" size="sm" onClick={resetForm}>
-                  <X className="h-4 w-4" />
+          <Card className="mb-8 border-2 border-primary/30">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="flex items-center justify-between text-xl">
+                <div className="flex items-center gap-3">
+                  {editingProduct ? 
+                    <Edit2 className="h-6 w-6 text-primary" /> : 
+                    <Plus className="h-6 w-6 text-primary" />
+                  }
+                  {editingProduct ? 'Edit Your Product' : 'Add New Product'}
+                </div>
+                <Button variant="ghost" size="lg" onClick={resetForm}>
+                  <X className="h-5 w-5" />
                 </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="category_id">Category</Label>
-                    <Select value={formData.category_id} onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories?.map((category, index) => (
-                          <SelectItem key={index} value={(index + 1).toString()}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+            <CardContent className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Step 1: Product Type */}
+                <div className="bg-muted/50 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
+                    <h3 className="text-lg font-semibold">What type of product is this?</h3>
                   </div>
-                  
-                  <div>
-                    <Label htmlFor="name">Product Name</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Enter product name"
-                      required
-                    />
-                  </div>
+                  <Select value={formData.category_id} onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}>
+                    <SelectTrigger className="h-12 text-base">
+                      <SelectValue placeholder="Choose the product type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">🚗 Cars & Vehicles</SelectItem>
+                      <SelectItem value="2">🔧 Car Parts & Components</SelectItem>
+                      <SelectItem value="3">⚙️ Heavy Machinery Parts</SelectItem>
+                      <SelectItem value="4">🚜 Construction Equipment</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="description">Description</Label>
+                {/* Step 2: Product Name */}
+                <div className="bg-muted/50 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
+                    <h3 className="text-lg font-semibold">What is the product name?</h3>
+                  </div>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Example: Toyota Camry 2024, Brake Pads, etc."
+                    className="h-12 text-base"
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">📝 Write the full product name clearly</p>
+                </div>
+
+                {/* Step 3: Description */}
+                <div className="bg-muted/50 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
+                    <h3 className="text-lg font-semibold">Describe your product</h3>
+                  </div>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Enter product description"
-                    rows={3}
+                    placeholder="Example: Premium sedan with excellent fuel economy, leather seats, backup camera, etc."
+                    rows={4}
+                    className="text-base"
                     required
                   />
+                  <p className="text-sm text-muted-foreground mt-2">📄 Tell customers what makes this product special</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="price">Price</Label>
-                    <Input
-                      id="price"
-                      value={formData.price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                      placeholder="e.g., $25,000 or Contact for Price"
-                      required
-                    />
+                {/* Step 4: Price */}
+                <div className="bg-muted/50 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">4</div>
+                    <h3 className="text-lg font-semibold">What is the price?</h3>
                   </div>
-                  
-                  <div>
-                    <Label htmlFor="image">Product Image</Label>
+                  <Input
+                    id="price"
+                    value={formData.price}
+                    onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                    placeholder="Example: $25,000 or Contact for Price"
+                    className="h-12 text-base"
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">💰 Write the price or "Contact for Price" if you prefer</p>
+                </div>
+
+                {/* Step 5: Photo */}
+                <div className="bg-muted/50 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">5</div>
+                    <h3 className="text-lg font-semibold">Add a photo (optional)</h3>
+                  </div>
+                  <div className="space-y-4">
                     <Input
                       id="image"
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
+                      className="h-12 text-base cursor-pointer"
                     />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Camera className="h-4 w-4" />
+                      <span>📸 Choose a clear photo of your product</span>
+                    </div>
                   </div>
-                </div>
-
-                {formData.image_url && (
-                  <div>
-                    <Label>Preview</Label>
-                    <img 
-                      src={formData.image_url} 
-                      alt="Product preview" 
-                      className="w-32 h-32 object-cover rounded-lg border"
-                    />
-                  </div>
-                )}
-
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.is_featured}
-                      onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="rounded border-gray-300"
-                    />
-                    <span className="text-sm text-foreground">Featured Product</span>
-                  </label>
                   
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.is_available}
-                      onChange={(e) => setFormData(prev => ({ ...prev, is_available: e.target.checked }))}
-                      className="rounded border-gray-300"
-                    />
-                    <span className="text-sm text-foreground">Available</span>
-                  </label>
+                  {formData.image_url && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium text-foreground mb-2">Preview:</p>
+                      <img 
+                        src={formData.image_url} 
+                        alt="Product preview" 
+                        className="w-40 h-40 object-cover rounded-lg border-2 border-border"
+                      />
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex gap-4">
-                  <Button type="submit" className="bg-primary hover:bg-primary/90">
-                    <Save className="mr-2 h-4 w-4" />
-                    {editingProduct ? 'Update Product' : 'Add Product'}
+                {/* Step 6: Special Settings */}
+                <div className="bg-muted/50 rounded-lg p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">6</div>
+                    <h3 className="text-lg font-semibold">Special settings (optional)</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={formData.is_featured}
+                        onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
+                        className="w-5 h-5 rounded border-gray-300"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2 font-medium text-foreground">
+                          <Star className="h-4 w-4 text-secondary" />
+                          Featured Product
+                        </div>
+                        <p className="text-sm text-muted-foreground">⭐ Make this product stand out to customers</p>
+                      </div>
+                    </label>
+                    
+                    <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={formData.is_available}
+                        onChange={(e) => setFormData(prev => ({ ...prev, is_available: e.target.checked }))}
+                        className="w-5 h-5 rounded border-gray-300"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2 font-medium text-foreground">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          Available for Sale
+                        </div>
+                        <p className="text-sm text-muted-foreground">✅ Customers can contact you about this product</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Submit Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border">
+                  <Button 
+                    type="submit" 
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-lg px-8"
+                    disabled={!formData.name || !formData.description || !formData.price || !formData.category_id}
+                  >
+                    <Save className="mr-2 h-5 w-5" />
+                    {editingProduct ? '✏️ Update Product' : '➕ Add Product'}
                   </Button>
-                  <Button type="button" variant="outline" onClick={resetForm}>
-                    Cancel
+                  <Button type="button" variant="outline" size="lg" onClick={resetForm} className="text-lg px-8">
+                    ❌ Cancel
                   </Button>
                 </div>
               </form>
