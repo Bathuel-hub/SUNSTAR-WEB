@@ -25,9 +25,9 @@ const Header = () => {
     <div className="flex items-center gap-3">
       <div className="relative">
         <img 
-          src="/sunstar-logo.png" 
+          src="/sunstar-logo-64.png" 
           alt="Sunstar International" 
-          className="h-10 w-10 object-contain rounded-full bg-white/10 p-1 border-2 border-primary/20"
+          className="h-12 w-12 object-contain rounded-full bg-white/5 p-1 border-2 border-primary/30 shadow-sm"
         />
       </div>
       <div>
