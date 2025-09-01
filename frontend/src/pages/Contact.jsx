@@ -392,6 +392,28 @@ const Contact = () => {
         </div>
       </section>
 
+      {/* Rate Your Experience */}
+      <section className="py-16 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+              Rate Your Experience
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Help us improve our services by sharing your feedback
+            </p>
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-lg px-8"
+              onClick={() => setShowRatingForm(true)}
+            >
+              Leave a Review
+              <Star className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Emergency Contact */}
       <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
