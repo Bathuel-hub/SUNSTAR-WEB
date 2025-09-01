@@ -19,6 +19,683 @@ import io
 BACKEND_URL = "https://intl-biz-portal.preview.emergentagent.com/api"
 TEST_TIMEOUT = 30
 
+class FileUploadTester:
+    def __init__(self):
+        self.session = None
+        self.test_results = []
+        self.uploaded_files = []  # Track uploaded files for cleanup
+        
+    async def setup(self):
+        """Setup test session"""
+        self.session = aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=TEST_TIMEOUT)
+        )
+        
+    async def cleanup(self):
+        """Cleanup test session and uploaded files"""
+        # Clean up uploaded test files
+        for filename in self.uploaded_files:
+            try:
+                async with self.session.delete(f"{BACKEND_URL}/upload/image/{filename}") as response:
+                    if response.status == 200:
+                        print(f"Cleaned up test file: {filename}")
+            except Exception as e:
+                print(f"Failed to cleanup file {filename}: {e}")
+        
+        if self.session:
+            await self.session.close()
+    
+    def log_test(self, test_name: str, success: bool, message: str, details: Dict = None):
+        """Log test result"""
+        result = {
+            "test": test_name,
+            "success": success,
+            "message": message,
+            "timestamp": datetime.now().isoformat(),
+            "details": details or {}
+        }
+        self.test_results.append(result)
+        
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{status} {test_name}: {message}")
+        if details:
+            for key, value in details.items():
+                print(f"    {key}: {value}")
+        print()
+    
+    def create_test_image(self, size_mb: float = 0.1, format: str = "JPEG") -> bytes:
+        """Create a test image file in memory"""
+        try:
+            from PIL import Image
+            
+            # Calculate dimensions for desired file size
+            # Rough estimation: JPEG compression ~10:1, RGB = 3 bytes per pixel
+            target_pixels = int((size_mb * 1024 * 1024) * 10 / 3)
+            width = height = int(target_pixels ** 0.5)
+            
+            # Create a simple colored image
+            img = Image.new('RGB', (width, height), color='red')
+            
+            # Save to bytes
+            img_bytes = io.BytesIO()
+            img.save(img_bytes, format=format, quality=85)
+            img_bytes.seek(0)
+            
+            return img_bytes.getvalue()
+        except ImportError:
+            # Fallback: create a simple file with repeated data
+            target_size = int(size_mb * 1024 * 1024)
+            # Create minimal JPEG header + data
+            jpeg_header = b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00'
+            jpeg_footer = b'\xff\xd9'
+            data_size = target_size - len(jpeg_header) - len(jpeg_footer)
+            data = b'A' * max(0, data_size)
+            return jpeg_header + data + jpeg_footer
+    
+    def create_test_text_file(self) -> bytes:
+        """Create a test text file"""
+        return b"This is a test text file, not an image."
+    
+    async def test_health_check(self):
+        """Test API health check endpoint"""
+        try:
+            async with self.session.get(f"{BACKEND_URL}/") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    self.log_test(
+                        "API Health Check",
+                        True,
+                        "Backend API is accessible and healthy",
+                        {"status_code": response.status, "response": data}
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "API Health Check",
+                        False,
+                        f"Unexpected status code: {response.status}",
+                        {"status_code": response.status}
+                    )
+                    return False
+        except Exception as e:
+            self.log_test(
+                "API Health Check",
+                False,
+                f"Failed to connect to backend: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
+    async def test_upload_valid_image(self):
+        """Test uploading a valid image file"""
+        try:
+            # Create a small test image (100KB)
+            image_data = self.create_test_image(0.1, "JPEG")
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            data.add_field('file', 
+                          image_data, 
+                          filename='test_image.jpg', 
+                          content_type='image/jpeg')
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/image", data=data) as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success") and result.get("data", {}).get("file_url"):
+                            filename = result["data"].get("filename")
+                            if filename:
+                                self.uploaded_files.append(filename)
+                            
+                            self.log_test(
+                                "Upload Valid Image",
+                                True,
+                                "Valid image uploaded successfully",
+                                {
+                                    "status_code": response.status,
+                                    "file_url": result["data"]["file_url"],
+                                    "filename": result["data"]["filename"],
+                                    "file_size": result["data"]["size"]
+                                }
+                            )
+                            return True, result["data"]["file_url"], result["data"]["filename"]
+                        else:
+                            self.log_test(
+                                "Upload Valid Image",
+                                False,
+                                "Invalid response format",
+                                {"response": result}
+                            )
+                            return False, None, None
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "Upload Valid Image",
+                            False,
+                            "Invalid JSON response",
+                            {"response_text": response_text}
+                        )
+                        return False, None, None
+                else:
+                    self.log_test(
+                        "Upload Valid Image",
+                        False,
+                        f"HTTP error: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False, None, None
+                    
+        except Exception as e:
+            self.log_test(
+                "Upload Valid Image",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False, None, None
+    
+    async def test_upload_invalid_file_type(self):
+        """Test uploading a non-image file (should fail)"""
+        try:
+            # Create a text file
+            text_data = self.create_test_text_file()
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            data.add_field('file', 
+                          text_data, 
+                          filename='test_file.txt', 
+                          content_type='text/plain')
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/image", data=data) as response:
+                response_text = await response.text()
+                
+                # Should return 400 error for invalid file type
+                if response.status == 400:
+                    try:
+                        result = await response.json()
+                        if "image" in result.get("detail", "").lower():
+                            self.log_test(
+                                "Upload Invalid File Type",
+                                True,
+                                "Non-image file correctly rejected",
+                                {
+                                    "status_code": response.status,
+                                    "error_message": result.get("detail")
+                                }
+                            )
+                            return True
+                    except json.JSONDecodeError:
+                        pass
+                    
+                    # Even if JSON decode fails, 400 status is correct
+                    self.log_test(
+                        "Upload Invalid File Type",
+                        True,
+                        "Non-image file correctly rejected (400 status)",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "Upload Invalid File Type",
+                        False,
+                        f"Expected 400 error but got {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "Upload Invalid File Type",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
+    async def test_upload_oversized_file(self):
+        """Test uploading a file over 5MB (should fail)"""
+        try:
+            # Create a large test image (6MB)
+            image_data = self.create_test_image(6.0, "JPEG")
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            data.add_field('file', 
+                          image_data, 
+                          filename='large_image.jpg', 
+                          content_type='image/jpeg')
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/image", data=data) as response:
+                response_text = await response.text()
+                
+                # Should return 400 error for oversized file
+                if response.status == 400:
+                    try:
+                        result = await response.json()
+                        if "5mb" in result.get("detail", "").lower() or "size" in result.get("detail", "").lower():
+                            self.log_test(
+                                "Upload Oversized File",
+                                True,
+                                "Oversized file correctly rejected",
+                                {
+                                    "status_code": response.status,
+                                    "error_message": result.get("detail"),
+                                    "file_size_mb": len(image_data) / (1024 * 1024)
+                                }
+                            )
+                            return True
+                    except json.JSONDecodeError:
+                        pass
+                    
+                    # Even if JSON decode fails, 400 status is correct
+                    self.log_test(
+                        "Upload Oversized File",
+                        True,
+                        "Oversized file correctly rejected (400 status)",
+                        {
+                            "status_code": response.status, 
+                            "response": response_text,
+                            "file_size_mb": len(image_data) / (1024 * 1024)
+                        }
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "Upload Oversized File",
+                        False,
+                        f"Expected 400 error but got {response.status}",
+                        {
+                            "status_code": response.status, 
+                            "response": response_text,
+                            "file_size_mb": len(image_data) / (1024 * 1024)
+                        }
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "Upload Oversized File",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
+    async def test_static_file_serving(self, file_url: str, filename: str):
+        """Test accessing uploaded image via static file serving"""
+        if not file_url or not filename:
+            self.log_test(
+                "Static File Serving",
+                False,
+                "No file URL provided for testing",
+                {}
+            )
+            return False
+        
+        try:
+            # Construct full URL for static file access
+            static_url = f"{BACKEND_URL.replace('/api', '')}{file_url}"
+            
+            async with self.session.get(static_url) as response:
+                if response.status == 200:
+                    content_type = response.headers.get('content-type', '')
+                    content_length = response.headers.get('content-length', '0')
+                    
+                    # Verify it's an image
+                    if content_type.startswith('image/'):
+                        self.log_test(
+                            "Static File Serving",
+                            True,
+                            "Uploaded image accessible via static serving",
+                            {
+                                "status_code": response.status,
+                                "content_type": content_type,
+                                "content_length": content_length,
+                                "static_url": static_url
+                            }
+                        )
+                        return True
+                    else:
+                        self.log_test(
+                            "Static File Serving",
+                            False,
+                            f"File accessible but wrong content type: {content_type}",
+                            {
+                                "status_code": response.status,
+                                "content_type": content_type,
+                                "static_url": static_url
+                            }
+                        )
+                        return False
+                else:
+                    self.log_test(
+                        "Static File Serving",
+                        False,
+                        f"File not accessible: HTTP {response.status}",
+                        {
+                            "status_code": response.status,
+                            "static_url": static_url
+                        }
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "Static File Serving",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e), "static_url": static_url if 'static_url' in locals() else "N/A"}
+            )
+            return False
+    
+    async def test_file_deletion(self, filename: str):
+        """Test file deletion endpoint"""
+        if not filename:
+            self.log_test(
+                "File Deletion",
+                False,
+                "No filename provided for deletion test",
+                {}
+            )
+            return False
+        
+        try:
+            async with self.session.delete(f"{BACKEND_URL}/upload/image/{filename}") as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success"):
+                            # Remove from our tracking list since it's deleted
+                            if filename in self.uploaded_files:
+                                self.uploaded_files.remove(filename)
+                            
+                            self.log_test(
+                                "File Deletion",
+                                True,
+                                "File deleted successfully",
+                                {
+                                    "status_code": response.status,
+                                    "filename": filename,
+                                    "message": result.get("message")
+                                }
+                            )
+                            return True
+                        else:
+                            self.log_test(
+                                "File Deletion",
+                                False,
+                                "Deletion response indicates failure",
+                                {"response": result}
+                            )
+                            return False
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "File Deletion",
+                            False,
+                            "Invalid JSON response for deletion",
+                            {"response_text": response_text}
+                        )
+                        return False
+                elif response.status == 404:
+                    self.log_test(
+                        "File Deletion",
+                        True,
+                        "File not found (already deleted or never existed)",
+                        {"status_code": response.status, "filename": filename}
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "File Deletion",
+                        False,
+                        f"Unexpected status code: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "File Deletion",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
+    async def test_admin_product_creation_with_image(self, image_url: str):
+        """Test creating a product with uploaded image URL"""
+        if not image_url:
+            self.log_test(
+                "Admin Product Creation with Image",
+                False,
+                "No image URL provided for product creation test",
+                {}
+            )
+            return False
+        
+        try:
+            product_data = {
+                "name": "Test Product with Image",
+                "description": "This is a test product created with an uploaded image",
+                "category": "Test Category",
+                "price": "Contact for Price",
+                "image_url": image_url,
+                "specifications": ["High Quality", "Durable", "Reliable"],
+                "availability": "In Stock"
+            }
+            
+            async with self.session.post(
+                f"{BACKEND_URL}/admin/products",
+                json=product_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success") and result.get("data", {}).get("product_id"):
+                            self.log_test(
+                                "Admin Product Creation with Image",
+                                True,
+                                "Product created successfully with uploaded image",
+                                {
+                                    "status_code": response.status,
+                                    "product_id": result["data"]["product_id"],
+                                    "image_url": image_url,
+                                    "message": result.get("message")
+                                }
+                            )
+                            return True, result["data"]["product_id"]
+                        else:
+                            self.log_test(
+                                "Admin Product Creation with Image",
+                                False,
+                                "Invalid response format",
+                                {"response": result}
+                            )
+                            return False, None
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "Admin Product Creation with Image",
+                            False,
+                            "Invalid JSON response",
+                            {"response_text": response_text}
+                        )
+                        return False, None
+                else:
+                    self.log_test(
+                        "Admin Product Creation with Image",
+                        False,
+                        f"HTTP error: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False, None
+                    
+        except Exception as e:
+            self.log_test(
+                "Admin Product Creation with Image",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False, None
+    
+    async def test_multiple_image_formats(self):
+        """Test uploading different image formats"""
+        formats = [
+            ("JPEG", "image/jpeg", ".jpg"),
+            ("PNG", "image/png", ".png")
+        ]
+        
+        success_count = 0
+        
+        for format_name, content_type, extension in formats:
+            try:
+                # Create test image in specific format
+                image_data = self.create_test_image(0.1, format_name)
+                
+                # Prepare multipart form data
+                data = aiohttp.FormData()
+                data.add_field('file', 
+                              image_data, 
+                              filename=f'test_image{extension}', 
+                              content_type=content_type)
+                
+                async with self.session.post(f"{BACKEND_URL}/upload/image", data=data) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        if result.get("success"):
+                            filename = result["data"].get("filename")
+                            if filename:
+                                self.uploaded_files.append(filename)
+                            success_count += 1
+                            print(f"  ✅ {format_name}: Success")
+                        else:
+                            print(f"  ❌ {format_name}: Invalid response")
+                    else:
+                        print(f"  ❌ {format_name}: HTTP {response.status}")
+                        
+            except Exception as e:
+                print(f"  ❌ {format_name}: Error - {str(e)}")
+        
+        success_rate = success_count / len(formats)
+        
+        self.log_test(
+            "Multiple Image Formats",
+            success_rate >= 0.8,
+            f"Tested {len(formats)} image formats, {success_count} successful",
+            {
+                "total_formats": len(formats),
+                "successful": success_count,
+                "success_rate": f"{success_rate:.1%}"
+            }
+        )
+        
+        return success_rate >= 0.8
+    
+    async def run_file_upload_tests(self):
+        """Run all file upload tests"""
+        print("🚀 Starting File Upload System Tests")
+        print("=" * 60)
+        
+        await self.setup()
+        
+        try:
+            # Test sequence for file upload functionality
+            tests = [
+                ("API Health Check", self.test_health_check),
+                ("Upload Valid Image", self.test_upload_valid_image),
+                ("Upload Invalid File Type", self.test_upload_invalid_file_type),
+                ("Upload Oversized File", self.test_upload_oversized_file),
+                ("Multiple Image Formats", self.test_multiple_image_formats)
+            ]
+            
+            passed = 0
+            total = len(tests)
+            uploaded_file_url = None
+            uploaded_filename = None
+            
+            for test_name, test_func in tests:
+                print(f"Running: {test_name}")
+                try:
+                    if test_name == "Upload Valid Image":
+                        result, file_url, filename = await test_func()
+                        if result:
+                            passed += 1
+                            uploaded_file_url = file_url
+                            uploaded_filename = filename
+                    else:
+                        result = await test_func()
+                        if result:
+                            passed += 1
+                except Exception as e:
+                    self.log_test(test_name, False, f"Test execution failed: {str(e)}", {"error": str(e)})
+                
+                print("-" * 40)
+            
+            # Additional tests that depend on successful upload
+            if uploaded_file_url and uploaded_filename:
+                print("Running: Static File Serving")
+                try:
+                    result = await self.test_static_file_serving(uploaded_file_url, uploaded_filename)
+                    if result:
+                        passed += 1
+                    total += 1
+                except Exception as e:
+                    self.log_test("Static File Serving", False, f"Test execution failed: {str(e)}", {"error": str(e)})
+                    total += 1
+                print("-" * 40)
+                
+                print("Running: Admin Product Creation with Image")
+                try:
+                    result, product_id = await self.test_admin_product_creation_with_image(uploaded_file_url)
+                    if result:
+                        passed += 1
+                    total += 1
+                except Exception as e:
+                    self.log_test("Admin Product Creation with Image", False, f"Test execution failed: {str(e)}", {"error": str(e)})
+                    total += 1
+                print("-" * 40)
+                
+                print("Running: File Deletion")
+                try:
+                    result = await self.test_file_deletion(uploaded_filename)
+                    if result:
+                        passed += 1
+                    total += 1
+                except Exception as e:
+                    self.log_test("File Deletion", False, f"Test execution failed: {str(e)}", {"error": str(e)})
+                    total += 1
+                print("-" * 40)
+            
+            # Summary
+            print("\n📊 FILE UPLOAD TEST SUMMARY")
+            print("=" * 60)
+            print(f"Total Tests: {total}")
+            print(f"Passed: {passed}")
+            print(f"Failed: {total - passed}")
+            print(f"Success Rate: {passed/total:.1%}")
+            
+            if passed == total:
+                print("\n🎉 ALL FILE UPLOAD TESTS PASSED! File upload system is working correctly.")
+            elif passed >= total * 0.8:
+                print("\n⚠️  Most file upload tests passed, but some issues detected.")
+            else:
+                print("\n❌ Multiple file upload test failures detected. System needs attention.")
+            
+            return passed, total
+            
+        finally:
+            await self.cleanup()
+
+
 class EmailServiceTester:
     def __init__(self):
         self.session = None
