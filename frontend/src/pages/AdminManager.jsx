@@ -9,7 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { 
   Plus, Edit2, Trash2, Save, X, Package, DollarSign, 
   ImageIcon, Loader2, Star, CheckCircle, Camera, Type, 
-  FileText, AlertCircle, Eye, Home
+  FileText, AlertCircle, Eye, Home, Upload, Cloud
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useProductCategories } from '../hooks/useApi';
@@ -20,6 +20,8 @@ const AdminManager = () => {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const { data: categories } = useProductCategories();
   
   const [formData, setFormData] = useState({
