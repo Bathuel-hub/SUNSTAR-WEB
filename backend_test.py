@@ -1253,6 +1253,43 @@ class FileUploadTester:
                 {"error": str(e)}
             )
             return False
+    
+    async def run_image_display_workflow_test(self):
+        """Run the specific image display workflow test as requested in review"""
+        print("🎯 Starting Image Display Workflow Test")
+        print("=" * 60)
+        
+        await self.setup()
+        
+        try:
+            # First ensure API is healthy
+            health_check = await self.test_health_check()
+            if not health_check:
+                print("❌ API Health Check failed - cannot proceed with workflow test")
+                return False
+            
+            # Run the complete workflow test
+            workflow_success = await self.test_complete_image_display_workflow()
+            
+            # Summary
+            print("\n📊 IMAGE DISPLAY WORKFLOW TEST SUMMARY")
+            print("=" * 60)
+            
+            if workflow_success:
+                print("🎉 ✅ IMAGE DISPLAY WORKFLOW TEST PASSED!")
+                print("   - Bulk image upload working")
+                print("   - Product creation with multiple images working")
+                print("   - Admin products list showing images correctly")
+                print("   - Image URLs accessible and serving files")
+                print("   - Store page should now display images correctly")
+                return True
+            else:
+                print("❌ IMAGE DISPLAY WORKFLOW TEST FAILED!")
+                print("   - Check individual test results above for details")
+                return False
+            
+        finally:
+            await self.cleanup()
 
     async def run_file_upload_tests(self):
         """Run all file upload tests"""
