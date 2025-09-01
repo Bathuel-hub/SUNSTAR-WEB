@@ -26,90 +26,6 @@ const Store = () => {
     4: Truck
   };
 
-  // Sample products with generated images for demonstration
-  const sampleProducts = {
-    1: [ // New Passenger Motor Vehicles
-      {
-        id: '1',
-        name: 'Toyota Camry 2024',
-        description: 'Premium sedan with advanced safety features, hybrid engine option, and luxurious interior.',
-        price: '$45,000',
-        image_url: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500&h=300&fit=crop',
-        is_featured: true,
-        category_name: 'New Passenger Motor Vehicles'
-      },
-      {
-        id: '2', 
-        name: 'Honda Accord 2024',
-        description: 'Reliable family sedan with excellent fuel efficiency and modern technology.',
-        price: '$42,000',
-        image_url: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500&h=300&fit=crop',
-        is_featured: false,
-        category_name: 'New Passenger Motor Vehicles'
-      },
-      {
-        id: '3',
-        name: 'Nissan Altima 2024', 
-        description: 'Sporty sedan with ProPILOT Assist and premium interior comfort.',
-        price: '$38,500',
-        image_url: 'https://images.unsplash.com/photo-1549399047-d52dbf139018?w=500&h=300&fit=crop',
-        is_featured: false,
-        category_name: 'New Passenger Motor Vehicles'
-      }
-    ],
-    2: [ // Auto Spare Parts & Components
-      {
-        id: '4',
-        name: 'Premium Brake Pads Set',
-        description: 'High-performance ceramic brake pads compatible with most vehicle models.',
-        price: '$75',
-        image_url: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=300&fit=crop',
-        is_featured: true,
-        category_name: 'Auto Spare Parts & Components'
-      },
-      {
-        id: '5',
-        name: 'Engine Oil Filter Kit',
-        description: 'Complete oil filter kit with premium filters for engine protection.',
-        price: '$25',
-        image_url: 'https://images.unsplash.com/photo-1635691033744-a1a2a07ba971?w=500&h=300&fit=crop',
-        is_featured: false,
-        category_name: 'Auto Spare Parts & Components'
-      }
-    ],
-    3: [ // Heavy Equipment & Machinery Spare Parts
-      {
-        id: '6',
-        name: 'Hydraulic Pump Assembly',
-        description: 'Heavy-duty hydraulic pump for excavators and construction equipment.',
-        price: 'Contact for Price',
-        image_url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=500&h=300&fit=crop',
-        is_featured: true,
-        category_name: 'Heavy Equipment & Machinery Spare Parts'
-      }
-    ],
-    4: [ // Construction Equipment & Machinery
-      {
-        id: '7',
-        name: 'CAT 320 Excavator',
-        description: '20-ton hydraulic excavator perfect for construction and earthmoving.',
-        price: 'Contact for Price',
-        image_url: 'https://images.unsplash.com/photo-1717386255773-1e3037c81788?w=500&h=300&fit=crop',
-        is_featured: true,
-        category_name: 'Construction Equipment & Machinery'
-      },
-      {
-        id: '8',
-        name: 'Concrete Mixer Truck',
-        description: '8 cubic meter capacity concrete mixer truck for construction projects.',
-        price: 'Contact for Price', 
-        image_url: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=500&h=300&fit=crop',
-        is_featured: false,
-        category_name: 'Construction Equipment & Machinery'
-      }
-    ]
-  };
-
   useEffect(() => {
     loadProducts();
   }, []);
@@ -117,7 +33,7 @@ const Store = () => {
   const loadProducts = async () => {
     try {
       setLoading(true);
-      // Try to get products from admin panel
+      // Get products from admin panel only
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/products`);
       let adminProducts = [];
       
@@ -125,25 +41,15 @@ const Store = () => {
         adminProducts = await response.json();
       }
 
-      // Combine admin products with sample products
+      // Only show admin products - no sample products
       const allProducts = [];
       
-      // Add admin products
+      // Add admin products with category names
       adminProducts.forEach(product => {
         const categoryName = getCategoryName(product.category_id);
         allProducts.push({
           ...product,
           category_name: categoryName
-        });
-      });
-
-      // Add sample products for demonstration
-      Object.values(sampleProducts).forEach(categoryProducts => {
-        categoryProducts.forEach(product => {
-          // Only add sample products if we don't have many admin products
-          if (adminProducts.length < 5) {
-            allProducts.push(product);
-          }
         });
       });
 
