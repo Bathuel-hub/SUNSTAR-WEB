@@ -129,13 +129,65 @@ const AdminManager = () => {
     setShowAddForm(false);
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // For now, we'll use a placeholder URL
-      // In production, you'd upload to a service like Cloudinary or AWS S3
-      const imageUrl = URL.createObjectURL(file);
-      setFormData(prev => ({ ...prev, image_url: imageUrl }));
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      setUploadProgress(0);
+
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + Math.random() * 20;
+        });
+      }, 100);
+
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/upload/image`, {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const imageUrl = `${process.env.REACT_APP_BACKEND_URL}${result.data.file_url}`;
+        
+        setFormData(prev => ({ ...prev, image_url: imageUrl }));
+        setUploadProgress(100);
+        
+        // Clear progress after a short delay
+        setTimeout(() => {
+          setUploading(false);
+          setUploadProgress(0);
+        }, 500);
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload image. Please try again.');
+      setUploading(false);
+      setUploadProgress(0);
     }
   };
 
