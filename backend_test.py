@@ -1075,6 +1075,185 @@ class FileUploadTester:
             )
             return False
     
+    async def test_complete_image_display_workflow(self):
+        """Test the complete image display workflow as requested in review"""
+        print("🎯 Testing Complete Image Display Workflow")
+        print("=" * 60)
+        
+        try:
+            # Step 1: Upload test images using bulk upload endpoint
+            print("Step 1: Uploading test images via bulk upload...")
+            success, uploaded_files = await self.test_bulk_upload_valid_images()
+            
+            if not success or not uploaded_files:
+                self.log_test(
+                    "Complete Image Display Workflow",
+                    False,
+                    "Failed at Step 1: Bulk image upload failed",
+                    {"step": 1, "uploaded_files": uploaded_files}
+                )
+                return False
+            
+            # Extract image URLs for product creation
+            image_urls = [file_info["file_url"] for file_info in uploaded_files]
+            print(f"✅ Step 1 Complete: Uploaded {len(image_urls)} images")
+            
+            # Step 2: Create a test product with uploaded images
+            print("Step 2: Creating test product with uploaded images...")
+            product_success, product_id = await self.test_product_creation_multiple_images(image_urls)
+            
+            if not product_success or not product_id:
+                self.log_test(
+                    "Complete Image Display Workflow",
+                    False,
+                    "Failed at Step 2: Product creation with images failed",
+                    {"step": 2, "product_id": product_id, "image_urls": image_urls}
+                )
+                return False
+            
+            print(f"✅ Step 2 Complete: Created product {product_id} with {len(image_urls)} images")
+            
+            # Step 3: Verify product creation shows images in admin panel
+            print("Step 3: Verifying product appears in admin products list...")
+            admin_products_success = await self.test_admin_products_list_contains_images(product_id, image_urls)
+            
+            if not admin_products_success:
+                self.log_test(
+                    "Complete Image Display Workflow",
+                    False,
+                    "Failed at Step 3: Product not found in admin list or images missing",
+                    {"step": 3, "product_id": product_id}
+                )
+                return False
+            
+            print(f"✅ Step 3 Complete: Product found in admin list with correct images")
+            
+            # Step 4: Test image accessibility via URLs
+            print("Step 4: Testing image accessibility via URLs...")
+            image_access_success = await self.test_bulk_file_serving(uploaded_files)
+            
+            if not image_access_success:
+                self.log_test(
+                    "Complete Image Display Workflow",
+                    False,
+                    "Failed at Step 4: Images not accessible via URLs",
+                    {"step": 4, "image_urls": image_urls}
+                )
+                return False
+            
+            print(f"✅ Step 4 Complete: All images accessible via URLs")
+            
+            # All steps successful
+            self.log_test(
+                "Complete Image Display Workflow",
+                True,
+                "✅ COMPLETE WORKFLOW SUCCESS: All steps passed - images upload, product creation, admin display, and URL access working",
+                {
+                    "product_id": product_id,
+                    "image_count": len(image_urls),
+                    "image_urls": image_urls,
+                    "uploaded_files": [f["filename"] for f in uploaded_files],
+                    "workflow_steps": "1. Bulk Upload ✅, 2. Product Creation ✅, 3. Admin Display ✅, 4. Image Access ✅"
+                }
+            )
+            return True
+            
+        except Exception as e:
+            self.log_test(
+                "Complete Image Display Workflow",
+                False,
+                f"Workflow failed with exception: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
+    async def test_admin_products_list_contains_images(self, expected_product_id: str, expected_image_urls: List[str]):
+        """Test that admin products list contains the created product with correct images"""
+        try:
+            async with self.session.get(f"{BACKEND_URL}/admin/products") as response:
+                if response.status == 200:
+                    products = await response.json()
+                    
+                    # Find our test product
+                    test_product = None
+                    for product in products:
+                        if product.get("id") == expected_product_id:
+                            test_product = product
+                            break
+                    
+                    if not test_product:
+                        self.log_test(
+                            "Admin Products List Contains Images",
+                            False,
+                            f"Product {expected_product_id} not found in admin products list",
+                            {"expected_product_id": expected_product_id, "total_products": len(products)}
+                        )
+                        return False
+                    
+                    # Check if image_urls array is populated correctly
+                    product_image_urls = test_product.get("image_urls", [])
+                    
+                    if not product_image_urls:
+                        self.log_test(
+                            "Admin Products List Contains Images",
+                            False,
+                            "Product found but image_urls array is empty",
+                            {"product": test_product}
+                        )
+                        return False
+                    
+                    # Check if all expected images are present
+                    missing_images = []
+                    for expected_url in expected_image_urls:
+                        if expected_url not in product_image_urls:
+                            missing_images.append(expected_url)
+                    
+                    if missing_images:
+                        self.log_test(
+                            "Admin Products List Contains Images",
+                            False,
+                            f"Product found but missing {len(missing_images)} images",
+                            {
+                                "product_id": expected_product_id,
+                                "expected_images": expected_image_urls,
+                                "actual_images": product_image_urls,
+                                "missing_images": missing_images
+                            }
+                        )
+                        return False
+                    
+                    # All checks passed
+                    self.log_test(
+                        "Admin Products List Contains Images",
+                        True,
+                        f"Product found in admin list with all {len(expected_image_urls)} images correctly stored",
+                        {
+                            "product_id": expected_product_id,
+                            "product_name": test_product.get("name"),
+                            "image_count": len(product_image_urls),
+                            "image_urls": product_image_urls
+                        }
+                    )
+                    return True
+                    
+                else:
+                    self.log_test(
+                        "Admin Products List Contains Images",
+                        False,
+                        f"Failed to fetch admin products: HTTP {response.status}",
+                        {"status_code": response.status}
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "Admin Products List Contains Images",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+
     async def run_file_upload_tests(self):
         """Run all file upload tests"""
         print("🚀 Starting File Upload System Tests")
