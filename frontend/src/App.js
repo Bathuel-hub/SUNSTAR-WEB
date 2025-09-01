@@ -25,6 +25,7 @@ function App() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/why-choose-us" element={<WhyChooseUs />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/manage-7hs82ns8xq0" element={<AdminManager />} />
               </Routes>
             </main>
             <Footer />
