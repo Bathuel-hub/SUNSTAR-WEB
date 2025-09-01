@@ -112,7 +112,7 @@ const Footer = () => {
                     <MessageCircle className="h-5 w-5" />
                   </button>
                   <button 
-                    onClick={() => window.open('https://facebook.com/sunstarinternational', '_blank')}
+                    onClick={() => window.open('https://web.facebook.com/profile.php?id=61580036196630', '_blank')}
                     className="text-muted-foreground hover:text-primary transition-colors"
                     aria-label="Facebook"
                   >
