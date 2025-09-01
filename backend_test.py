@@ -610,6 +610,471 @@ class FileUploadTester:
         
         return success_rate >= 0.8
     
+    async def test_bulk_upload_valid_images(self):
+        """Test uploading multiple valid image files"""
+        try:
+            # Create 3 test images
+            test_images = []
+            for i in range(3):
+                image_data = self.create_test_image(0.1, "JPEG")
+                test_images.append((f'test_bulk_{i+1}.jpg', image_data, 'image/jpeg'))
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            for filename, image_data, content_type in test_images:
+                data.add_field('files', image_data, filename=filename, content_type=content_type)
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/images", data=data) as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success") and result.get("data", {}).get("uploaded_files"):
+                            uploaded_files = result["data"]["uploaded_files"]
+                            upload_count = result["data"]["upload_count"]
+                            
+                            # Track uploaded files for cleanup
+                            for file_info in uploaded_files:
+                                filename = file_info.get("filename")
+                                if filename:
+                                    self.bulk_uploaded_files.append(filename)
+                            
+                            self.log_test(
+                                "Bulk Upload Valid Images",
+                                True,
+                                f"Successfully uploaded {upload_count} images",
+                                {
+                                    "status_code": response.status,
+                                    "upload_count": upload_count,
+                                    "total_files": len(test_images),
+                                    "uploaded_files": [f["filename"] for f in uploaded_files]
+                                }
+                            )
+                            return True, uploaded_files
+                        else:
+                            self.log_test(
+                                "Bulk Upload Valid Images",
+                                False,
+                                "Invalid response format",
+                                {"response": result}
+                            )
+                            return False, []
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "Bulk Upload Valid Images",
+                            False,
+                            "Invalid JSON response",
+                            {"response_text": response_text}
+                        )
+                        return False, []
+                else:
+                    self.log_test(
+                        "Bulk Upload Valid Images",
+                        False,
+                        f"HTTP error: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False, []
+                    
+        except Exception as e:
+            self.log_test(
+                "Bulk Upload Valid Images",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False, []
+    
+    async def test_bulk_upload_file_limit(self):
+        """Test uploading more than 10 images (should fail)"""
+        try:
+            # Create 12 test images (exceeds limit of 10)
+            test_images = []
+            for i in range(12):
+                image_data = self.create_test_image(0.05, "JPEG")  # Smaller images
+                test_images.append((f'test_limit_{i+1}.jpg', image_data, 'image/jpeg'))
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            for filename, image_data, content_type in test_images:
+                data.add_field('files', image_data, filename=filename, content_type=content_type)
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/images", data=data) as response:
+                response_text = await response.text()
+                
+                # Should return 400 error for exceeding file limit
+                if response.status == 400:
+                    try:
+                        result = await response.json()
+                        if "maximum" in result.get("detail", "").lower() or "10" in result.get("detail", ""):
+                            self.log_test(
+                                "Bulk Upload File Limit",
+                                True,
+                                "File limit correctly enforced",
+                                {
+                                    "status_code": response.status,
+                                    "error_message": result.get("detail"),
+                                    "files_attempted": len(test_images)
+                                }
+                            )
+                            return True
+                    except json.JSONDecodeError:
+                        pass
+                    
+                    # Even if JSON decode fails, 400 status is correct
+                    self.log_test(
+                        "Bulk Upload File Limit",
+                        True,
+                        "File limit correctly enforced (400 status)",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "Bulk Upload File Limit",
+                        False,
+                        f"Expected 400 error but got {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "Bulk Upload File Limit",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
+    async def test_bulk_upload_mixed_files(self):
+        """Test uploading mix of valid images and invalid files"""
+        try:
+            # Create mix of files: 3 valid images + 2 text files
+            files_data = []
+            
+            # Valid images
+            for i in range(3):
+                image_data = self.create_test_image(0.1, "JPEG")
+                files_data.append((f'valid_image_{i+1}.jpg', image_data, 'image/jpeg'))
+            
+            # Invalid text files
+            for i in range(2):
+                text_data = self.create_test_text_file()
+                files_data.append((f'invalid_file_{i+1}.txt', text_data, 'text/plain'))
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            for filename, file_data, content_type in files_data:
+                data.add_field('files', file_data, filename=filename, content_type=content_type)
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/images", data=data) as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success"):
+                            uploaded_files = result["data"].get("uploaded_files", [])
+                            errors = result["data"].get("errors", [])
+                            
+                            # Track uploaded files for cleanup
+                            for file_info in uploaded_files:
+                                filename = file_info.get("filename")
+                                if filename:
+                                    self.bulk_uploaded_files.append(filename)
+                            
+                            # Should have 3 successful uploads and 2 errors
+                            success = len(uploaded_files) == 3 and len(errors) == 2
+                            
+                            self.log_test(
+                                "Bulk Upload Mixed Files",
+                                success,
+                                f"Processed mixed files: {len(uploaded_files)} uploaded, {len(errors)} errors",
+                                {
+                                    "status_code": response.status,
+                                    "uploaded_count": len(uploaded_files),
+                                    "error_count": len(errors),
+                                    "errors": errors
+                                }
+                            )
+                            return success, uploaded_files
+                        else:
+                            self.log_test(
+                                "Bulk Upload Mixed Files",
+                                False,
+                                "Invalid response format",
+                                {"response": result}
+                            )
+                            return False, []
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "Bulk Upload Mixed Files",
+                            False,
+                            "Invalid JSON response",
+                            {"response_text": response_text}
+                        )
+                        return False, []
+                else:
+                    self.log_test(
+                        "Bulk Upload Mixed Files",
+                        False,
+                        f"HTTP error: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False, []
+                    
+        except Exception as e:
+            self.log_test(
+                "Bulk Upload Mixed Files",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False, []
+    
+    async def test_bulk_file_serving(self, uploaded_files: List[Dict]):
+        """Test accessing bulk uploaded images via file serving"""
+        if not uploaded_files:
+            self.log_test(
+                "Bulk File Serving",
+                False,
+                "No uploaded files provided for testing",
+                {}
+            )
+            return False
+        
+        success_count = 0
+        total_files = len(uploaded_files)
+        
+        for file_info in uploaded_files:
+            file_url = file_info.get("file_url")
+            filename = file_info.get("filename")
+            
+            if not file_url or not filename:
+                continue
+            
+            try:
+                # Test file serving endpoint
+                async with self.session.get(f"{BACKEND_URL}/uploads/{filename}") as response:
+                    if response.status == 200:
+                        content_type = response.headers.get('content-type', '')
+                        if content_type.startswith('image/'):
+                            success_count += 1
+                            print(f"  ✅ {filename}: Accessible")
+                        else:
+                            print(f"  ❌ {filename}: Wrong content type - {content_type}")
+                    else:
+                        print(f"  ❌ {filename}: HTTP {response.status}")
+                        
+            except Exception as e:
+                print(f"  ❌ {filename}: Error - {str(e)}")
+        
+        success_rate = success_count / total_files if total_files > 0 else 0
+        
+        self.log_test(
+            "Bulk File Serving",
+            success_rate >= 0.8,
+            f"File serving test: {success_count}/{total_files} files accessible",
+            {
+                "total_files": total_files,
+                "accessible_files": success_count,
+                "success_rate": f"{success_rate:.1%}"
+            }
+        )
+        
+        return success_rate >= 0.8
+    
+    async def test_product_creation_multiple_images(self, image_urls: List[str]):
+        """Test creating a product with multiple image URLs"""
+        if not image_urls:
+            self.log_test(
+                "Product Creation Multiple Images",
+                False,
+                "No image URLs provided for product creation test",
+                {}
+            )
+            return False
+        
+        try:
+            product_data = {
+                "category_id": "test-category-123",
+                "name": "Multi-Image Test Product",
+                "description": "This is a test product created with multiple uploaded images for testing the new bulk upload functionality.",
+                "price": "Contact for Price",
+                "image_urls": image_urls,
+                "is_featured": True,
+                "is_available": True
+            }
+            
+            async with self.session.post(
+                f"{BACKEND_URL}/admin/products",
+                json=product_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success") and result.get("data", {}).get("product_id"):
+                            self.log_test(
+                                "Product Creation Multiple Images",
+                                True,
+                                "Product created successfully with multiple images",
+                                {
+                                    "status_code": response.status,
+                                    "product_id": result["data"]["product_id"],
+                                    "image_count": len(image_urls),
+                                    "image_urls": image_urls,
+                                    "message": result.get("message")
+                                }
+                            )
+                            return True, result["data"]["product_id"]
+                        else:
+                            self.log_test(
+                                "Product Creation Multiple Images",
+                                False,
+                                "Invalid response format",
+                                {"response": result}
+                            )
+                            return False, None
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "Product Creation Multiple Images",
+                            False,
+                            "Invalid JSON response",
+                            {"response_text": response_text}
+                        )
+                        return False, None
+                else:
+                    self.log_test(
+                        "Product Creation Multiple Images",
+                        False,
+                        f"HTTP error: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False, None
+                    
+        except Exception as e:
+            self.log_test(
+                "Product Creation Multiple Images",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False, None
+    
+    async def test_backward_compatibility(self):
+        """Test backward compatibility with single image upload"""
+        try:
+            # Test single image upload endpoint still works
+            image_data = self.create_test_image(0.1, "JPEG")
+            
+            # Prepare multipart form data
+            data = aiohttp.FormData()
+            data.add_field('file', 
+                          image_data, 
+                          filename='backward_compat_test.jpg', 
+                          content_type='image/jpeg')
+            
+            async with self.session.post(f"{BACKEND_URL}/upload/image", data=data) as response:
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    try:
+                        result = await response.json()
+                        if result.get("success") and result.get("data", {}).get("file_url"):
+                            filename = result["data"].get("filename")
+                            if filename:
+                                self.uploaded_files.append(filename)
+                            
+                            # Test creating product with single image_url (legacy format)
+                            single_image_url = result["data"]["file_url"]
+                            
+                            # Test product creation with legacy single image format
+                            legacy_product_data = {
+                                "category_id": "test-category-legacy",
+                                "name": "Legacy Single Image Product",
+                                "description": "Testing backward compatibility with single image",
+                                "price": "Contact for Price",
+                                "image_urls": [single_image_url],  # New format but single image
+                                "is_featured": False,
+                                "is_available": True
+                            }
+                            
+                            async with self.session.post(
+                                f"{BACKEND_URL}/admin/products",
+                                json=legacy_product_data,
+                                headers={"Content-Type": "application/json"}
+                            ) as prod_response:
+                                
+                                if prod_response.status == 200:
+                                    prod_result = await prod_response.json()
+                                    if prod_result.get("success"):
+                                        self.log_test(
+                                            "Backward Compatibility",
+                                            True,
+                                            "Single image upload and product creation working",
+                                            {
+                                                "single_upload_status": response.status,
+                                                "product_creation_status": prod_response.status,
+                                                "product_id": prod_result["data"]["product_id"],
+                                                "image_url": single_image_url
+                                            }
+                                        )
+                                        return True
+                                    else:
+                                        self.log_test(
+                                            "Backward Compatibility",
+                                            False,
+                                            "Product creation failed with single image",
+                                            {"product_response": prod_result}
+                                        )
+                                        return False
+                                else:
+                                    self.log_test(
+                                        "Backward Compatibility",
+                                        False,
+                                        f"Product creation HTTP error: {prod_response.status}",
+                                        {"status_code": prod_response.status}
+                                    )
+                                    return False
+                        else:
+                            self.log_test(
+                                "Backward Compatibility",
+                                False,
+                                "Single image upload failed - invalid response",
+                                {"response": result}
+                            )
+                            return False
+                    except json.JSONDecodeError:
+                        self.log_test(
+                            "Backward Compatibility",
+                            False,
+                            "Single image upload failed - invalid JSON",
+                            {"response_text": response_text}
+                        )
+                        return False
+                else:
+                    self.log_test(
+                        "Backward Compatibility",
+                        False,
+                        f"Single image upload HTTP error: {response.status}",
+                        {"status_code": response.status, "response": response_text}
+                    )
+                    return False
+                    
+        except Exception as e:
+            self.log_test(
+                "Backward Compatibility",
+                False,
+                f"Request failed: {str(e)}",
+                {"error": str(e)}
+            )
+            return False
+    
     async def run_file_upload_tests(self):
         """Run all file upload tests"""
         print("🚀 Starting File Upload System Tests")
