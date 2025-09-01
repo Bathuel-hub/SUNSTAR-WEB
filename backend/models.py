@@ -116,7 +116,7 @@ class ProductItem(BaseModel):
     name: str
     description: str
     price: str
-    image_url: Optional[str] = None
+    image_urls: List[str] = Field(default_factory=list)  # Support multiple images
     is_featured: bool = False
     is_available: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -127,6 +127,7 @@ class ProductItemCreate(BaseModel):
     name: str
     description: str
     price: str
+    image_urls: List[str] = Field(default_factory=list)  # Support multiple images
     is_featured: bool = False
     is_available: bool = True
 
