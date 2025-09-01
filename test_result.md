@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Make it mandatory to upload pics in the admin panel. The uploading of pictures does not work. Add a slick and cool loading animation when it is uploading too."
+user_problem_statement: "Make it mandatory to upload pics in the admin panel. The uploading of pictures does not work. Add a slick and cool loading animation when it is uploading too. Oh and also add a way so that multiple photos can be uploaded."
 
 backend:
   - task: "File Upload API Implementation"
