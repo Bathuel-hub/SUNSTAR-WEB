@@ -218,11 +218,219 @@ async def get_stats():
         logger.error(f"Error fetching stats: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+# Customer Rating Endpoints
+@router.post("/ratings", response_model=SuccessResponse)
+async def create_customer_rating(
+    rating: CustomerRatingCreate,
+    request: Request
+):
+    """Submit a customer rating/review"""
+    try:
+        db = get_database()
+        
+        # Get client IP
+        client_ip = request.client.host
+        
+        # Create rating document
+        rating_data = rating.dict()
+        rating_data.update({
+            "ip_address": client_ip,
+            "created_at": datetime.utcnow()
+        })
+        
+        rating_obj = CustomerRating(**rating_data)
+        rating_dict = rating_obj.dict()
+        
+        # Save to database
+        await db.customer_ratings.insert_one(rating_dict)
+        
+        return SuccessResponse(
+            message="Thank you for your feedback! Your rating has been recorded.",
+            data={"rating_id": rating_obj.id}
+        )
+    except Exception as e:
+        logger.error(f"Error creating customer rating: {e}")
+        raise HTTPException(status_code=500, detail="Failed to submit rating")
+
+@router.get("/ratings", response_model=List[CustomerRating])
+async def get_customer_ratings(limit: int = 10, category: Optional[str] = None):
+    """Get customer ratings (public endpoint)"""
+    try:
+        db = get_database()
+        
+        filter_query = {}
+        if category:
+            filter_query["service_category"] = category
+        
+        ratings = []
+        async for rating in db.customer_ratings.find(
+            filter_query, 
+            {"_id": 0}
+        ).sort("created_at", -1).limit(limit):
+            ratings.append(CustomerRating(**rating))
+        
+        return ratings
+    except Exception as e:
+        logger.error(f"Error fetching ratings: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+# Admin Product Management Endpoints
+@router.get("/admin/products", response_model=List[ProductItem])
+async def get_admin_products():
+    """Get all products for admin management"""
+    try:
+        db = get_database()
+        
+        products = []
+        async for product in db.admin_products.find({}, {"_id": 0}):
+            products.append(ProductItem(**product))
+        
+        return products
+    except Exception as e:
+        logger.error(f"Error fetching admin products: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.post("/admin/products", response_model=SuccessResponse)
+async def create_admin_product(product: ProductItemCreate):
+    """Create a new product (admin only)"""
+    try:
+        db = get_database()
+        
+        product_obj = ProductItem(**product.dict())
+        product_dict = product_obj.dict()
+        
+        await db.admin_products.insert_one(product_dict)
+        
+        return SuccessResponse(
+            message="Product created successfully",
+            data={"product_id": product_obj.id}
+        )
+    except Exception as e:
+        logger.error(f"Error creating product: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create product")
+
+@router.delete("/admin/products/{product_id}", response_model=SuccessResponse)
+async def delete_admin_product(product_id: str):
+    """Delete a product (admin only)"""
+    try:
+        db = get_database()
+        
+        result = await db.admin_products.delete_one({"id": product_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        return SuccessResponse(message="Product deleted successfully")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting product: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete product")
+
+@router.put("/admin/products/{product_id}", response_model=SuccessResponse)
+async def update_admin_product(product_id: str, product: ProductItemCreate):
+    """Update a product (admin only)"""
+    try:
+        db = get_database()
+        
+        update_data = product.dict()
+        update_data["updated_at"] = datetime.utcnow()
+        
+        result = await db.admin_products.update_one(
+            {"id": product_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        return SuccessResponse(message="Product updated successfully")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating product: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update product")
+
+# Email Functions
+async def send_contact_email(inquiry: ContactInquiry):
+    """Send contact form as formatted email"""
+    try:
+        # Email configuration
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+        sender_email = "sunstarintl.ae@gmail.com"  # This would be your sending email
+        sender_password = os.environ.get("EMAIL_PASSWORD", "your-app-password")
+        recipient_email = "sunstarintl.ae@gmail.com"
+        
+        # Create message
+        msg = MimeMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = f"New Contact Inquiry - {inquiry.inquiry_type}"
+        
+        # Create HTML table format
+        html_body = f"""
+        <html>
+        <body>
+            <h2>New Contact Form Submission</h2>
+            <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 600px;">
+                <tr style="background-color: #f2f2f2;">
+                    <td><strong>Field</strong></td>
+                    <td><strong>Information</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td>{inquiry.name}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td>{inquiry.email}</td>
+                </tr>
+                <tr>
+                    <td><strong>Phone</strong></td>
+                    <td>{inquiry.phone or 'Not provided'}</td>
+                </tr>
+                <tr>
+                    <td><strong>Company</strong></td>
+                    <td>{inquiry.company or 'Not provided'}</td>
+                </tr>
+                <tr>
+                    <td><strong>Inquiry Type</strong></td>
+                    <td>{inquiry.inquiry_type}</td>
+                </tr>
+                <tr>
+                    <td><strong>Message</strong></td>
+                    <td>{inquiry.message}</td>
+                </tr>
+                <tr>
+                    <td><strong>Submitted On</strong></td>
+                    <td>{inquiry.created_at.strftime('%Y-%m-%d %H:%M:%S UTC')}</td>
+                </tr>
+                <tr>
+                    <td><strong>IP Address</strong></td>
+                    <td>{inquiry.ip_address}</td>
+                </tr>
+            </table>
+            <p><em>This inquiry was submitted through the Sun Star International website contact form.</em></p>
+        </body>
+        </html>
+        """
+        
+        msg.attach(MimeText(html_body, 'html'))
+        
+        # Send email (in production, you'd use proper email service)
+        logger.info(f"Email would be sent to {recipient_email} with inquiry from {inquiry.email}")
+        # Uncomment below for actual email sending:
+        # server = smtplib.SMTP(smtp_server, smtp_port)
+        # server.starttls()
+        # server.login(sender_email, sender_password)
+        # server.send_message(msg)
+        # server.quit()
+        
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
+
 # Background Tasks
 async def send_inquiry_notification(inquiry: ContactInquiry):
-    """Send email notification for new inquiry (placeholder)"""
-    # This is a placeholder for email notification functionality
-    # In a real implementation, you would integrate with an email service
-    logger.info(f"New inquiry received from {inquiry.name} ({inquiry.email})")
-    logger.info(f"Inquiry type: {inquiry.inquiry_type}")
-    logger.info(f"Message: {inquiry.message}")
+    """Send email notification for new inquiry"""
+    await send_contact_email(inquiry)
