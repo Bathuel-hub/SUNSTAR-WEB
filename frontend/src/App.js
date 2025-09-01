@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Products from "./pages/Products";
 import WhyChooseUs from "./pages/WhyChooseUs";
 import Contact from "./pages/Contact";
+import AdminManager from "./pages/AdminManager";
 
 function App() {
   return (
