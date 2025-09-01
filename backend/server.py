@@ -1,6 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import logging
 import os
