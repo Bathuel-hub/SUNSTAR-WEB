@@ -10,7 +10,7 @@ import {
 import { useProductCategories, useCompanyInfo } from '../hooks/useApi';
 import { contactActions } from '../utils/contactUtils';
 
-const Gallery = () => {
+const Store = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
