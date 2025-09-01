@@ -484,6 +484,15 @@ Thank you for your time.`;
           </div>
         </div>
       </section>
+
+      {/* Rating Form Modal */}
+      {showRatingForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-lg">
+            <RatingForm onClose={() => setShowRatingForm(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
