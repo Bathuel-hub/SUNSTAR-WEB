@@ -118,7 +118,7 @@ const Store = () => {
       {/* Gallery Navigation */}
       <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
-          <Tabs defaultValue="all" className="w-full">
+          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Category Tabs */}
               <div className="lg:w-1/4">
