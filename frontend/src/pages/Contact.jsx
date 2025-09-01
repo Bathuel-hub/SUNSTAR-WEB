@@ -8,11 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from '../components/ui/badge';
 import { 
   Phone, Mail, MapPin, Clock, MessageCircle, 
-  Send, Building2, Globe, Headphones, Loader2, CheckCircle
+  Send, Building2, Globe, Headphones, Loader2, CheckCircle, Star
 } from 'lucide-react';
 import { useCompanyInfo } from '../hooks/useApi';
 import { api } from '../services/api';
 import { contactActions } from '../utils/contactUtils';
+import RatingForm from '../components/RatingForm';
 
 const Contact = () => {
   const { data: companyInfo } = useCompanyInfo();
