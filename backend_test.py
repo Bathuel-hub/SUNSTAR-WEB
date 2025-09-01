@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend Test Suite for Sun Star International Email Service Integration
-Tests the contact form email functionality and API endpoints
+Backend Test Suite for Sun Star International
+Tests the email service integration and file upload functionality
 """
 
 import asyncio
@@ -9,8 +9,11 @@ import aiohttp
 import json
 import os
 import sys
+import tempfile
 from datetime import datetime
 from typing import Dict, Any, List
+from pathlib import Path
+import io
 
 # Test configuration
 BACKEND_URL = "https://intl-biz-portal.preview.emergentagent.com/api"
