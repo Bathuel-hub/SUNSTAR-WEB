@@ -10,6 +10,7 @@ import { heroImage } from '../mock';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   const { data: companyInfo, loading: companyLoading, error: companyError } = useCompanyInfo();
   const { data: productCategories, loading: productsLoading, error: productsError } = useProductCategories();
   const { data: testimonials, loading: testimonialsLoading, error: testimonialsError } = useTestimonials();
