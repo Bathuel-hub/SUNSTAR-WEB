@@ -571,8 +571,22 @@ const AdminManager = () => {
                 <Card key={product.id} className="overflow-hidden border-2 hover:border-primary/30 transition-all">
                   <div className="flex">
                     {/* Product Image */}
-                    <div className="w-1/3 h-32">
-                      {product.image_url ? (
+                    <div className="w-1/3 h-32 relative">
+                      {product.image_urls && product.image_urls.length > 0 ? (
+                        <>
+                          <img 
+                            src={product.image_urls[0]} 
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                          {product.image_urls.length > 1 && (
+                            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                              +{product.image_urls.length - 1} more
+                            </div>
+                          )}
+                        </>
+                      ) : product.image_url ? (
+                        // Backward compatibility for old single image format
                         <img 
                           src={product.image_url} 
                           alt={product.name}
