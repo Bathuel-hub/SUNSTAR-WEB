@@ -1,13 +1,20 @@
-from fastapi import APIRouter, HTTPException, Request, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Request, BackgroundTasks, UploadFile, File
 from fastapi.responses import JSONResponse
 from typing import List, Optional
 from datetime import datetime
 import logging
+import smtplib
+import os
+from email.mime.text import MimeText
+from email.mime.multipart import MimeMultipart
+from email.mime.base import MimeBase
+from email import encoders
 
 from database import get_database
 from models import (
     CompanyInfo, ProductCategory, Product, ContactInquiry, ContactInquiryCreate,
-    Testimonial, Advantage, SuccessResponse, ErrorResponse
+    Testimonial, Advantage, SuccessResponse, ErrorResponse, CustomerRating, 
+    CustomerRatingCreate, ProductItem, ProductItemCreate
 )
 
 logger = logging.getLogger(__name__)
