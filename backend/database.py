@@ -82,30 +82,34 @@ async def initialize_database():
     if await categories_collection.count_documents({}) == 0:
         categories_data = [
             {
+                "id": "1",
                 "name": "New Passenger Motor Vehicles",
                 "description": "High-quality new passenger cars from trusted global manufacturers",
-                "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7",
+                "image": "",  # No placeholder image
                 "products": ["Sedans", "SUVs", "Hatchbacks", "Luxury Vehicles"],
                 "created_at": datetime.utcnow()
             },
             {
+                "id": "2", 
                 "name": "Auto Spare Parts & Components",
                 "description": "Comprehensive range of automotive parts and components",
-                "image": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHxhdXRvbW90aXZlJTIwcGFydHN8ZW58MHx8fHwxNzU2NDk3Nzg5fDA&ixlib=rb-4.1.0&q=85",
+                "image": "",  # No placeholder image
                 "products": ["Engines", "Transmissions", "Body Parts", "Electrical Components"],
                 "created_at": datetime.utcnow()
             },
             {
+                "id": "3",
                 "name": "Heavy Equipment & Machinery Spare Parts",
                 "description": "Durable spare parts for heavy machinery and construction equipment",
-                "image": "https://images.unsplash.com/photo-1635691033744-a1a2a07ba971?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxlbmdpbmVzfGVufDB8fHx8MTc1NjQ5Nzc5N3ww&ixlib=rb-4.1.0&q=85",
+                "image": "",  # No placeholder image
                 "products": ["Hydraulic Parts", "Engine Components", "Tracks & Tires", "Filters & Fluids"],
                 "created_at": datetime.utcnow()
             },
             {
+                "id": "4",
                 "name": "Construction Equipment & Machinery",
                 "description": "Professional construction machinery for all your project needs",
-                "image": "https://images.unsplash.com/photo-1717386255773-1e3037c81788?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxtYWNoaW5lcnl8ZW58MHx8fHwxNzU2NDk3ODA0fDA&ixlib=rb-4.1.0&q=85",
+                "image": "",  # No placeholder image
                 "products": ["Excavators", "Bulldozers", "Cranes", "Loaders", "Concrete Mixers"],
                 "created_at": datetime.utcnow()
             }
