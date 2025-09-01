@@ -81,9 +81,6 @@ api_router.include_router(api_routes)
 # Add the API router to the main app
 app.include_router(api_router)
 
-# Mount static files for image uploads
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-
 # Root endpoint (legacy compatibility)
 @app.get("/")
 async def root():
