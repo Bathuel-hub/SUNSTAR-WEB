@@ -19,7 +19,7 @@ const Footer = () => {
                 <img 
                   src="/sunstar-logo-64.png" 
                   alt="Sunstar International" 
-                  className="h-12 w-12 object-contain rounded-full bg-white/5 p-1 border-2 border-primary/30 shadow-sm"
+                  className="h-12 w-12 rounded-full object-cover border-2 border-primary/30 shadow-sm"
                 />
               </div>
               <div>
