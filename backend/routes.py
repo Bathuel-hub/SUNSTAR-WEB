@@ -355,50 +355,80 @@ async def update_admin_product(product_id: str, product: ProductItemCreate):
         raise HTTPException(status_code=500, detail="Failed to update product")
 
 # File Upload Endpoints
-@router.post("/upload/image", response_model=SuccessResponse)
-async def upload_image(file: UploadFile = File(...)):
-    """Upload an image file for products"""
+@router.post("/upload/images", response_model=SuccessResponse)
+async def upload_multiple_images(files: List[UploadFile] = File(...)):
+    """Upload multiple image files for products"""
     try:
-        # Validate file type
-        if not file.content_type.startswith('image/'):
-            raise HTTPException(status_code=400, detail="File must be an image")
+        if len(files) > 10:  # Limit to 10 images per upload
+            raise HTTPException(status_code=400, detail="Maximum 10 images allowed per upload")
         
-        # Validate file size (max 5MB)
-        file_size = 0
-        content = await file.read()
-        file_size = len(content)
+        uploaded_files = []
+        errors = []
         
-        if file_size > 5 * 1024 * 1024:  # 5MB
-            raise HTTPException(status_code=400, detail="File size must be less than 5MB")
+        for file in files:
+            try:
+                # Validate file type
+                if not file.content_type.startswith('image/'):
+                    errors.append(f"{file.filename}: Must be an image file")
+                    continue
+                
+                # Read and validate file size
+                content = await file.read()
+                file_size = len(content)
+                
+                if file_size > 5 * 1024 * 1024:  # 5MB
+                    errors.append(f"{file.filename}: File size must be less than 5MB")
+                    continue
+                
+                # Generate unique filename
+                file_extension = os.path.splitext(file.filename)[1].lower()
+                unique_filename = f"{uuid.uuid4()}{file_extension}"
+                file_path = UPLOAD_DIR / unique_filename
+                
+                # Save file
+                with open(file_path, "wb") as buffer:
+                    buffer.write(content)
+                
+                # Add to successful uploads
+                file_url = f"/api/uploads/{unique_filename}"
+                uploaded_files.append({
+                    "file_url": file_url,
+                    "filename": unique_filename,
+                    "original_name": file.filename,
+                    "size": file_size
+                })
+                
+                # Reset file position for next file
+                await file.seek(0)
+                
+            except Exception as e:
+                errors.append(f"{file.filename}: {str(e)}")
+                continue
         
-        # Generate unique filename
-        file_extension = os.path.splitext(file.filename)[1].lower()
-        unique_filename = f"{uuid.uuid4()}{file_extension}"
-        file_path = UPLOAD_DIR / unique_filename
+        if not uploaded_files and errors:
+            raise HTTPException(status_code=400, detail=f"No files uploaded successfully. Errors: {'; '.join(errors)}")
         
-        # Save file
-        with open(file_path, "wb") as buffer:
-            buffer.write(content)
+        logger.info(f"Bulk upload completed: {len(uploaded_files)} successful, {len(errors)} errors")
         
-        # Return file URL (use /api/uploads/ path to ensure proper routing)
-        file_url = f"/api/uploads/{unique_filename}"
+        response_data = {
+            "uploaded_files": uploaded_files,
+            "upload_count": len(uploaded_files),
+            "total_files": len(files)
+        }
         
-        logger.info(f"File uploaded successfully: {unique_filename}")
+        if errors:
+            response_data["errors"] = errors
         
         return SuccessResponse(
-            message="Image uploaded successfully",
-            data={
-                "file_url": file_url,
-                "filename": unique_filename,
-                "size": file_size
-            }
+            message=f"Successfully uploaded {len(uploaded_files)} out of {len(files)} images",
+            data=response_data
         )
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error uploading file: {e}")
-        raise HTTPException(status_code=500, detail="Failed to upload image")
+        logger.error(f"Error in bulk upload: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload images")
 
 @router.delete("/upload/image/{filename}", response_model=SuccessResponse)
 async def delete_image(filename: str):
