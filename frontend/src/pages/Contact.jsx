@@ -28,6 +28,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [showRatingForm, setShowRatingForm] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
