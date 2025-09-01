@@ -71,6 +71,9 @@ const Footer = () => {
               <Link to="/products" className="block text-muted-foreground hover:text-primary transition-colors">
                 Products & Services
               </Link>
+              <Link to="/gallery" className="block text-muted-foreground hover:text-primary transition-colors">
+                Gallery
+              </Link>
               <Link to="/why-choose-us" className="block text-muted-foreground hover:text-primary transition-colors">
                 Why Choose Us
               </Link>
