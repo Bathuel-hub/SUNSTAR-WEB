@@ -73,35 +73,9 @@ async def get_products_by_category(category_id: str):
 
 @router.get("/products/sample/{category_id}")
 async def get_sample_products(category_id: str):
-    """Get sample products for display"""
-    sample_products = {
-        "1": [
-            {"name": "Toyota Camry 2024", "specs": "2.5L Engine, CVT, LED Headlights", "price": "Contact for Price"},
-            {"name": "Honda Accord 2024", "specs": "1.5L Turbo, Hybrid Available", "price": "Contact for Price"},
-            {"name": "Nissan Altima 2024", "specs": "2.0L VC-Turbo, ProPILOT Assist", "price": "Contact for Price"},
-            {"name": "Hyundai Sonata 2024", "specs": "2.5L GDI, SmartSense Safety", "price": "Contact for Price"}
-        ],
-        "2": [
-            {"name": "Engine Oil Filters", "specs": "Compatible with major brands", "price": "From $15"},
-            {"name": "Brake Pads Set", "specs": "Ceramic & Semi-Metallic options", "price": "From $45"},
-            {"name": "Transmission Parts", "specs": "OEM & Aftermarket quality", "price": "Contact for Price"},
-            {"name": "Air Intake Systems", "specs": "Performance & Standard grades", "price": "From $120"}
-        ],
-        "3": [
-            {"name": "Hydraulic Cylinders", "specs": "Various bore sizes available", "price": "Contact for Price"},
-            {"name": "Track Chains", "specs": "Heavy-duty steel construction", "price": "Contact for Price"},
-            {"name": "Engine Overhaul Kits", "specs": "Complete rebuild packages", "price": "Contact for Price"},
-            {"name": "Hydraulic Pumps", "specs": "OEM replacements available", "price": "Contact for Price"}
-        ],
-        "4": [
-            {"name": "Excavator CAT 320", "specs": "20-ton operating weight", "price": "Contact for Price"},
-            {"name": "Bulldozer D6T", "specs": "Track-type tractor", "price": "Contact for Price"},
-            {"name": "Mobile Crane 50T", "specs": "Hydraulic telescopic boom", "price": "Contact for Price"},
-            {"name": "Concrete Mixer Truck", "specs": "8-12 cubic meter capacity", "price": "Contact for Price"}
-        ]
-    }
-    
-    return sample_products.get(category_id, [])
+    """Get sample products for display - now returns empty for clean start"""
+    # Return empty list - no sample products
+    return []
 
 # Contact & Inquiry Endpoints
 @router.post("/contact/inquiry", response_model=SuccessResponse)
