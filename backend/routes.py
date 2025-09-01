@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request, BackgroundTasks, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from typing import List, Optional
 from datetime import datetime
 import logging
