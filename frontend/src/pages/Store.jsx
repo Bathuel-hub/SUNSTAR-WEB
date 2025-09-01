@@ -12,6 +12,7 @@ import { useProductCategories, useCompanyInfo } from '../hooks/useApi';
 import { contactActions } from '../utils/contactUtils';
 
 const Store = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
