@@ -34,7 +34,7 @@ class FileUploadTester:
         
     async def cleanup(self):
         """Cleanup test session and uploaded files"""
-        # Clean up uploaded test files
+        # Clean up uploaded test files (single upload)
         for filename in self.uploaded_files:
             try:
                 async with self.session.delete(f"{BACKEND_URL}/upload/image/{filename}") as response:
@@ -42,6 +42,15 @@ class FileUploadTester:
                         print(f"Cleaned up test file: {filename}")
             except Exception as e:
                 print(f"Failed to cleanup file {filename}: {e}")
+        
+        # Clean up bulk uploaded test files
+        for filename in self.bulk_uploaded_files:
+            try:
+                async with self.session.delete(f"{BACKEND_URL}/upload/image/{filename}") as response:
+                    if response.status == 200:
+                        print(f"Cleaned up bulk test file: {filename}")
+            except Exception as e:
+                print(f"Failed to cleanup bulk file {filename}: {e}")
         
         if self.session:
             await self.session.close()
