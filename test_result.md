@@ -145,6 +145,18 @@ backend:
         -comment: "Email service working perfectly with Gmail SMTP. All contact form submissions are being sent to sunstarintl.ae@gmail.com with beautiful HTML table format."
 
 frontend:
+  - task: "Admin Panel Multiple Image Upload"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminManager.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Updated AdminManager to support multiple image uploads (max 10). Added image_urls array, multiple file selection, grid display of uploaded images with individual delete buttons, image counter display, 'Add More Images' button, and enhanced form validation requiring at least one image."
+
   - task: "Admin Panel Image Upload Mandatory"
     implemented: true
     working: "NA"
