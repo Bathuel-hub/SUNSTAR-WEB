@@ -345,34 +345,89 @@ const AdminManager = () => {
                   <p className="text-sm text-muted-foreground mt-2">💰 Write the price or "Contact for Price" if you prefer</p>
                 </div>
 
-                {/* Step 5: Photo */}
-                <div className="bg-muted/50 rounded-lg p-6">
+                {/* Step 5: Photo - MANDATORY */}
+                <div className="bg-muted/50 rounded-lg p-6 border-2 border-primary/20">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">5</div>
-                    <h3 className="text-lg font-semibold">Add a photo (optional)</h3>
-                  </div>
-                  <div className="space-y-4">
-                    <Input
-                      id="image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="h-12 text-base cursor-pointer"
-                    />
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Camera className="h-4 w-4" />
-                      <span>📸 Choose a clear photo of your product</span>
-                    </div>
+                    <h3 className="text-lg font-semibold">Add a photo *REQUIRED*</h3>
+                    <Badge className="bg-red-100 text-red-800 text-xs">MANDATORY</Badge>
                   </div>
                   
+                  {!formData.image_url && (
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <Input
+                          id="image"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="h-12 text-base cursor-pointer"
+                          disabled={uploading}
+                          required
+                        />
+                        {uploading && (
+                          <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-md">
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                              <span className="text-sm font-medium">Uploading...</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {uploading && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-foreground">Upload Progress</span>
+                            <span className="text-primary font-bold">{Math.round(uploadProgress)}%</span>
+                          </div>
+                          <div className="relative h-2 bg-muted rounded-full overflow-hidden">
+                            <div 
+                              className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out"
+                              style={{ width: `${uploadProgress}%` }}
+                            />
+                            <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Cloud className="h-4 w-4 animate-bounce" />
+                            <span>Uploading to server...</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-2 text-sm text-red-600 font-medium">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>📸 Product photo is required before saving</span>
+                      </div>
+                    </div>
+                  )}
+                  
                   {formData.image_url && (
-                    <div className="mt-4">
-                      <p className="text-sm font-medium text-foreground mb-2">Preview:</p>
-                      <img 
-                        src={formData.image_url} 
-                        alt="Product preview" 
-                        className="w-40 h-40 object-cover rounded-lg border-2 border-border"
-                      />
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-sm text-green-600 font-medium mb-4">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>✅ Image uploaded successfully!</span>
+                      </div>
+                      
+                      <div className="relative group">
+                        <img 
+                          src={formData.image_url} 
+                          alt="Product preview" 
+                          className="w-full max-w-md h-48 object-cover rounded-lg border-2 border-border shadow-md"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Change Image
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
