@@ -107,15 +107,18 @@ user_problem_statement: "Make it mandatory to upload pics in the admin panel. Th
 backend:
   - task: "File Upload API Implementation"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/backend/routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
         -comment: "Implemented /api/upload/image endpoint with proper file validation (image type, 5MB limit), unique filename generation using UUID, file storage in uploads directory, and image deletion endpoint. Added static file serving in server.py for uploaded images."
+        -working: false
+        -agent: "testing"
+        -comment: "File upload API working correctly - validates file types, size limits, generates unique filenames, and stores files properly. File deletion endpoint also working. CRITICAL ISSUE: Static file serving not working due to ingress routing conflict - /uploads path routes to frontend instead of backend. Files upload successfully but cannot be accessed via URL. Admin product creation has validation issue requiring category_id field."
 
   - task: "Email Service Integration"
     implemented: true
@@ -156,19 +159,21 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "1.1"
-  test_sequence: 2
+  version: "1.2"
+  test_sequence: 3
   run_ui: false
 
 test_plan:
   current_focus:
-    - "File Upload API Implementation"
     - "Admin Panel Image Upload Mandatory"
     - "Cool Loading Animation"
-  stuck_tasks: []
+  stuck_tasks:
+    - "File Upload API Implementation"
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
     -agent: "main"
     -message: "Implemented complete file upload system for admin panel. Backend has new /api/upload/image endpoint with validation and file storage. Frontend admin panel now requires image upload before saving products, with cool loading animations including progress bar, shimmer effects, and smooth transitions. Static file serving configured for uploaded images. Need to test the complete file upload workflow."
+    -agent: "testing"
+    -message: "BACKEND TESTING COMPLETED. File upload API is working correctly with proper validation and file storage. CRITICAL ISSUE FOUND: Static file serving not accessible due to ingress routing - /uploads routes to frontend instead of backend. Files upload but cannot be accessed via URL. This breaks the complete workflow. Admin product creation needs category_id field. Email service working perfectly. Frontend testing still needed."
