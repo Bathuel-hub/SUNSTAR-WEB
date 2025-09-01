@@ -1818,7 +1818,21 @@ class EmailServiceTester:
             await self.cleanup()
 
 async def main():
-    """Main test execution"""
+    """Main test execution with workflow option"""
+    import sys
+    
+    # Check for workflow test argument
+    if len(sys.argv) > 1 and sys.argv[1].lower() == "workflow":
+        print("🎯 Running Image Display Workflow Test (as requested in review)")
+        print("=" * 80)
+        
+        tester = FileUploadTester()
+        success = await tester.run_image_display_workflow_test()
+        
+        # Exit with appropriate code
+        sys.exit(0 if success else 1)
+    
+    # Default: Run all tests
     print("🔧 Sun Star International Backend Test Suite")
     print("=" * 80)
     
