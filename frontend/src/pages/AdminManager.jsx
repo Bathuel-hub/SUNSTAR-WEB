@@ -479,14 +479,30 @@ const AdminManager = () => {
                     type="submit" 
                     size="lg"
                     className="bg-primary hover:bg-primary/90 text-lg px-8"
-                    disabled={!formData.name || !formData.description || !formData.price || !formData.category_id}
+                    disabled={!formData.name || !formData.description || !formData.price || !formData.category_id || !formData.image_url || uploading}
                   >
-                    <Save className="mr-2 h-5 w-5" />
-                    {editingProduct ? '✏️ Update Product' : '➕ Add Product'}
+                    {uploading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Uploading Image...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-5 w-5" />
+                        {editingProduct ? '✏️ Update Product' : '➕ Add Product'}
+                      </>
+                    )}
                   </Button>
-                  <Button type="button" variant="outline" size="lg" onClick={resetForm} className="text-lg px-8">
+                  <Button type="button" variant="outline" size="lg" onClick={resetForm} className="text-lg px-8" disabled={uploading}>
                     ❌ Cancel
                   </Button>
+                  
+                  {(!formData.image_url && !uploading) && (
+                    <div className="flex items-center gap-2 text-sm text-red-600">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>Image upload is required to save product</span>
+                    </div>
+                  )}
                 </div>
               </form>
             </CardContent>
