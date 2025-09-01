@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Products from "./pages/Products";
-import Gallery from "./pages/Gallery";
+import Store from "./pages/Store";
 import WhyChooseUs from "./pages/WhyChooseUs";
 import Contact from "./pages/Contact";
 import AdminManager from "./pages/AdminManager";
