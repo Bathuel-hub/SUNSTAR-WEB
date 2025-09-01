@@ -187,10 +187,10 @@ const Store = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-6 bg-primary hover:bg-primary/90 text-primary-foreground">
-              Product Gallery
+              Our Store
             </Badge>
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Browse Our Products
+              Browse Our Store
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Explore our extensive catalog of vehicles, parts, and machinery. Each product is carefully selected for quality and reliability.
