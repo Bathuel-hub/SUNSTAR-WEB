@@ -153,14 +153,14 @@ const Store = () => {
                   <ProductGrid products={products} companyInfo={companyInfo} />
                 </TabsContent>
 
-                {categories?.map((category, index) => (
-                  <TabsContent key={index} value={(index + 1).toString()} className="mt-0">
+                {categories?.map((category) => (
+                  <TabsContent key={category.id} value={category.id} className="mt-0">
                     <div className="mb-6">
                       <h2 className="text-2xl font-bold text-foreground mb-2">{category.name}</h2>
                       <p className="text-muted-foreground">{category.description}</p>
                     </div>
                     <ProductGrid 
-                      products={getProductsByCategory((index + 1).toString())} 
+                      products={getProductsByCategory(category.id)} 
                       companyInfo={companyInfo}
                     />
                   </TabsContent>
