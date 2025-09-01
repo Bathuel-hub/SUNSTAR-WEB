@@ -418,6 +418,31 @@ async def delete_image(filename: str):
         logger.error(f"Error deleting file: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete image")
 
+@router.get("/uploads/{filename}")
+async def serve_uploaded_file(filename: str):
+    """Serve uploaded image files"""
+    try:
+        file_path = UPLOAD_DIR / filename
+        
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="File not found")
+        
+        # Security check: ensure filename doesn't contain path traversal
+        if ".." in filename or "/" in filename or "\\" in filename:
+            raise HTTPException(status_code=400, detail="Invalid filename")
+        
+        return FileResponse(
+            path=file_path,
+            media_type="image/jpeg",  # Will be overridden by FastAPI based on file extension
+            filename=filename
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error serving file: {e}")
+        raise HTTPException(status_code=500, detail="Failed to serve file")
+
 # Background Tasks
 async def send_inquiry_notification(inquiry: ContactInquiry):
     """Send email notification for new inquiry using email service"""
