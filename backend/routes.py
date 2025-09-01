@@ -354,6 +354,70 @@ async def update_admin_product(product_id: str, product: ProductItemCreate):
         logger.error(f"Error updating product: {e}")
         raise HTTPException(status_code=500, detail="Failed to update product")
 
+# File Upload Endpoints
+@router.post("/upload/image", response_model=SuccessResponse)
+async def upload_image(file: UploadFile = File(...)):
+    """Upload an image file for products"""
+    try:
+        # Validate file type
+        if not file.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="File must be an image")
+        
+        # Validate file size (max 5MB)
+        file_size = 0
+        content = await file.read()
+        file_size = len(content)
+        
+        if file_size > 5 * 1024 * 1024:  # 5MB
+            raise HTTPException(status_code=400, detail="File size must be less than 5MB")
+        
+        # Generate unique filename
+        file_extension = os.path.splitext(file.filename)[1].lower()
+        unique_filename = f"{uuid.uuid4()}{file_extension}"
+        file_path = UPLOAD_DIR / unique_filename
+        
+        # Save file
+        with open(file_path, "wb") as buffer:
+            buffer.write(content)
+        
+        # Return file URL (in production, you'd use a CDN or cloud storage)
+        file_url = f"/uploads/{unique_filename}"
+        
+        logger.info(f"File uploaded successfully: {unique_filename}")
+        
+        return SuccessResponse(
+            message="Image uploaded successfully",
+            data={
+                "file_url": file_url,
+                "filename": unique_filename,
+                "size": file_size
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error uploading file: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload image")
+
+@router.delete("/upload/image/{filename}", response_model=SuccessResponse)
+async def delete_image(filename: str):
+    """Delete an uploaded image file"""
+    try:
+        file_path = UPLOAD_DIR / filename
+        
+        if file_path.exists():
+            os.remove(file_path)
+            return SuccessResponse(message="Image deleted successfully")
+        else:
+            raise HTTPException(status_code=404, detail="Image not found")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting file: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete image")
+
 # Background Tasks
 async def send_inquiry_notification(inquiry: ContactInquiry):
     """Send email notification for new inquiry using email service"""
