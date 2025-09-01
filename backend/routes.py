@@ -4,6 +4,9 @@ from typing import List, Optional
 from datetime import datetime
 import logging
 import os
+import uuid
+import shutil
+from pathlib import Path
 
 from database import get_database
 from models import (
@@ -16,6 +19,10 @@ from email_service import email_service
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# Create uploads directory if it doesn't exist
+UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 # Company Information Endpoints
 @router.get("/company-info", response_model=CompanyInfo)
