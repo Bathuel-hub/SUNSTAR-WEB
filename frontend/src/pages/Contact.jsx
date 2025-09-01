@@ -17,6 +17,7 @@ import { contactActions } from '../utils/contactUtils';
 import RatingForm from '../components/RatingForm';
 
 const Contact = () => {
+  const location = useLocation();
   const { data: companyInfo } = useCompanyInfo();
   const [formData, setFormData] = useState({
     name: '',
@@ -30,6 +31,36 @@ const Contact = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [showRatingForm, setShowRatingForm] = useState(false);
+
+  // Handle pre-filled data from Store redirects
+  useEffect(() => {
+    if (location.state) {
+      const { productName, productCategory, inquiryType, productPrice } = location.state;
+      
+      let prefilledMessage = '';
+      if (productName && productCategory) {
+        prefilledMessage = `I am interested in the following product:
+
+Product: ${productName}
+Category: ${productCategory}
+Price: ${productPrice || 'Contact for Price'}
+
+Please provide me with:
+- Detailed specifications
+- Availability and delivery time
+- Final pricing
+- Payment terms
+
+Thank you for your time.`;
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        inquiry_type: inquiryType === 'product_inquiry' ? 'vehicles' : (inquiryType || ''),
+        message: prefilledMessage
+      }));
+    }
+  }, [location.state]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
