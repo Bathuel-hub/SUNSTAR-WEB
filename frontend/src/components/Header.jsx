@@ -22,15 +22,16 @@ const Header = () => {
   ];
 
   const Logo = () => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3">
       <div className="relative">
-        <Star className="h-8 w-8 text-primary fill-current" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-3 h-3 bg-secondary rounded-full"></div>
-        </div>
+        <img 
+          src="/sunstar-logo.png" 
+          alt="Sunstar International" 
+          className="h-10 w-10 object-contain rounded-full bg-white/10 p-1 border-2 border-primary/20"
+        />
       </div>
       <div>
-        <div className="font-bold text-lg text-foreground">SUN STAR</div>
+        <div className="font-bold text-lg text-foreground">SUNSTAR</div>
         <div className="text-xs text-muted-foreground -mt-1">INTERNATIONAL</div>
       </div>
     </div>
