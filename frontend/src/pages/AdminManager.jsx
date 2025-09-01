@@ -371,88 +371,113 @@ const AdminManager = () => {
                   <p className="text-sm text-muted-foreground mt-2">💰 Write the price or "Contact for Price" if you prefer</p>
                 </div>
 
-                {/* Step 5: Photo - MANDATORY */}
+                {/* Step 5: Photos - MANDATORY */}
                 <div className="bg-muted/50 rounded-lg p-6 border-2 border-primary/20">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold">5</div>
-                    <h3 className="text-lg font-semibold">Add a photo *REQUIRED*</h3>
+                    <h3 className="text-lg font-semibold">Add photos *REQUIRED*</h3>
                     <Badge className="bg-red-100 text-red-800 text-xs">MANDATORY</Badge>
                   </div>
                   
-                  {!formData.image_url && (
-                    <div className="space-y-4">
-                      <div className="relative">
-                        <Input
-                          id="image"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="h-12 text-base cursor-pointer"
-                          disabled={uploading}
-                          required
-                        />
-                        {uploading && (
-                          <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-md">
-                            <div className="flex items-center gap-2">
-                              <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                              <span className="text-sm font-medium">Uploading...</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <Input
+                        id="images"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageUpload}
+                        className="h-12 text-base cursor-pointer"
+                        disabled={uploading}
+                        required={formData.image_urls.length === 0}
+                      />
                       {uploading && (
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-foreground">Upload Progress</span>
-                            <span className="text-primary font-bold">{Math.round(uploadProgress)}%</span>
-                          </div>
-                          <div className="relative h-2 bg-muted rounded-full overflow-hidden">
-                            <div 
-                              className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out"
-                              style={{ width: `${uploadProgress}%` }}
-                            />
-                            <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Cloud className="h-4 w-4 animate-bounce" />
-                            <span>Uploading to server...</span>
+                        <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-md">
+                          <div className="flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                            <span className="text-sm font-medium">Uploading...</span>
                           </div>
                         </div>
                       )}
-                      
+                    </div>
+                    
+                    {uploading && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-foreground">Upload Progress</span>
+                          <span className="text-primary font-bold">{Math.round(uploadProgress)}%</span>
+                        </div>
+                        <div className="relative h-2 bg-muted rounded-full overflow-hidden">
+                          <div 
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out"
+                            style={{ width: `${uploadProgress}%` }}
+                          />
+                          <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Cloud className="h-4 w-4 animate-bounce" />
+                          <span>Uploading to server...</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Camera className="h-4 w-4" />
+                      <span>📸 You can select multiple images at once (max 10 images, 5MB each)</span>
+                    </div>
+                    
+                    {formData.image_urls.length === 0 && (
                       <div className="flex items-center gap-2 text-sm text-red-600 font-medium">
                         <AlertCircle className="h-4 w-4" />
-                        <span>📸 Product photo is required before saving</span>
+                        <span>At least one product photo is required before saving</span>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   
-                  {formData.image_url && (
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2 text-sm text-green-600 font-medium mb-4">
+                  {formData.image_urls.length > 0 && (
+                    <div className="space-y-4 mt-6">
+                      <div className="flex items-center gap-2 text-sm text-green-600 font-medium">
                         <CheckCircle className="h-4 w-4" />
-                        <span>✅ Image uploaded successfully!</span>
+                        <span>✅ {formData.image_urls.length} image{formData.image_urls.length > 1 ? 's' : ''} uploaded successfully!</span>
                       </div>
                       
-                      <div className="relative group">
-                        <img 
-                          src={formData.image_url} 
-                          alt="Product preview" 
-                          className="w-full max-w-md h-48 object-cover rounded-lg border-2 border-border shadow-md"
-                        />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
-                            className="bg-red-600 hover:bg-red-700"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Change Image
-                          </Button>
-                        </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {formData.image_urls.map((imageUrl, index) => (
+                          <div key={index} className="relative group">
+                            <img 
+                              src={imageUrl} 
+                              alt={`Product preview ${index + 1}`} 
+                              className="w-full h-32 object-cover rounded-lg border-2 border-border shadow-md"
+                            />
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => removeImage(index)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                              {index + 1}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="text-center">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => document.getElementById('images').click()}
+                          disabled={uploading || formData.image_urls.length >= 10}
+                          className="text-primary border-primary hover:bg-primary/10"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add More Images {formData.image_urls.length >= 10 ? '(Max Reached)' : `(${formData.image_urls.length}/10)`}
+                        </Button>
                       </div>
                     </div>
                   )}
