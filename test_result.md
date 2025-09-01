@@ -105,6 +105,18 @@
 user_problem_statement: "Make it mandatory to upload pics in the admin panel. The uploading of pictures does not work. Add a slick and cool loading animation when it is uploading too. Oh and also add a way so that multiple photos can be uploaded."
 
 backend:
+  - task: "Multiple File Upload API Implementation"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Implemented /api/upload/images endpoint for bulk uploads (max 10 images), updated ProductItem model to support image_urls array, added file serving through /api/uploads/{filename} to fix routing issues, enhanced validation for multiple files with per-file error reporting."
+
   - task: "File Upload API Implementation"
     implemented: true
     working: false
