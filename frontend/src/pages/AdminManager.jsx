@@ -29,7 +29,7 @@ const AdminManager = () => {
     name: '',
     description: '',
     price: '',
-    image_url: '',
+    image_urls: [], // Changed from image_url to image_urls array
     is_featured: false,
     is_available: true
   });
