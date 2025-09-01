@@ -386,4 +386,4 @@ const ProductCard = ({ product, companyInfo }) => {
   );
 };
 
-export default Gallery;
+export default Store;
