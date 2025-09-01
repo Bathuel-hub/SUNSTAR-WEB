@@ -7,11 +7,13 @@ import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Badge } from '../components/ui/badge';
 import { 
-  Plus, Edit2, Trash2, Upload, Save, X, 
-  Package, DollarSign, ImageIcon, Loader2
+  Plus, Edit2, Trash2, Save, X, Package, DollarSign, 
+  ImageIcon, Loader2, Star, CheckCircle, Camera, Type, 
+  FileText, AlertCircle, Eye, Home
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useProductCategories } from '../hooks/useApi';
-import { api } from '../services/api';
+import ThemeToggle from '../components/ThemeToggle';
 
 const AdminManager = () => {
   const [products, setProducts] = useState([]);
