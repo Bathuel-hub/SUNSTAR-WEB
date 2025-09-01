@@ -346,84 +346,26 @@ async def update_admin_product(product_id: str, product: ProductItemCreate):
         logger.error(f"Error updating product: {e}")
         raise HTTPException(status_code=500, detail="Failed to update product")
 
-# Email Functions
+# Email Functions (Placeholder for now)
 async def send_contact_email(inquiry: ContactInquiry):
-    """Send contact form as formatted email"""
+    """Log contact form submission (email functionality can be added later)"""
     try:
-        # Email configuration
-        smtp_server = "smtp.gmail.com"
-        smtp_port = 587
-        sender_email = "sunstarintl.ae@gmail.com"  # This would be your sending email
-        sender_password = os.environ.get("EMAIL_PASSWORD", "your-app-password")
-        recipient_email = "sunstarintl.ae@gmail.com"
+        # For now, just log the contact form data in a structured format
+        logger.info("=== NEW CONTACT FORM SUBMISSION ===")
+        logger.info(f"Name: {inquiry.name}")
+        logger.info(f"Email: {inquiry.email}")
+        logger.info(f"Phone: {inquiry.phone or 'Not provided'}")
+        logger.info(f"Company: {inquiry.company or 'Not provided'}")
+        logger.info(f"Inquiry Type: {inquiry.inquiry_type}")
+        logger.info(f"Message: {inquiry.message}")
+        logger.info(f"Submitted: {inquiry.created_at}")
+        logger.info(f"IP Address: {inquiry.ip_address}")
+        logger.info("===================================")
         
-        # Create message
-        msg = MimeMultipart()
-        msg['From'] = sender_email
-        msg['To'] = recipient_email
-        msg['Subject'] = f"New Contact Inquiry - {inquiry.inquiry_type}"
-        
-        # Create HTML table format
-        html_body = f"""
-        <html>
-        <body>
-            <h2>New Contact Form Submission</h2>
-            <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 600px;">
-                <tr style="background-color: #f2f2f2;">
-                    <td><strong>Field</strong></td>
-                    <td><strong>Information</strong></td>
-                </tr>
-                <tr>
-                    <td><strong>Name</strong></td>
-                    <td>{inquiry.name}</td>
-                </tr>
-                <tr>
-                    <td><strong>Email</strong></td>
-                    <td>{inquiry.email}</td>
-                </tr>
-                <tr>
-                    <td><strong>Phone</strong></td>
-                    <td>{inquiry.phone or 'Not provided'}</td>
-                </tr>
-                <tr>
-                    <td><strong>Company</strong></td>
-                    <td>{inquiry.company or 'Not provided'}</td>
-                </tr>
-                <tr>
-                    <td><strong>Inquiry Type</strong></td>
-                    <td>{inquiry.inquiry_type}</td>
-                </tr>
-                <tr>
-                    <td><strong>Message</strong></td>
-                    <td>{inquiry.message}</td>
-                </tr>
-                <tr>
-                    <td><strong>Submitted On</strong></td>
-                    <td>{inquiry.created_at.strftime('%Y-%m-%d %H:%M:%S UTC')}</td>
-                </tr>
-                <tr>
-                    <td><strong>IP Address</strong></td>
-                    <td>{inquiry.ip_address}</td>
-                </tr>
-            </table>
-            <p><em>This inquiry was submitted through the Sun Star International website contact form.</em></p>
-        </body>
-        </html>
-        """
-        
-        msg.attach(MimeText(html_body, 'html'))
-        
-        # Send email (in production, you'd use proper email service)
-        logger.info(f"Email would be sent to {recipient_email} with inquiry from {inquiry.email}")
-        # Uncomment below for actual email sending:
-        # server = smtplib.SMTP(smtp_server, smtp_port)
-        # server.starttls()
-        # server.login(sender_email, sender_password)
-        # server.send_message(msg)
-        # server.quit()
+        # TODO: Implement actual email sending with service like SendGrid, Mailgun, etc.
         
     except Exception as e:
-        logger.error(f"Failed to send email: {e}")
+        logger.error(f"Failed to log inquiry: {e}")
 
 # Background Tasks
 async def send_inquiry_notification(inquiry: ContactInquiry):
