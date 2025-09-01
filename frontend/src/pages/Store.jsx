@@ -292,6 +292,8 @@ const ProductGrid = ({ products, companyInfo }) => {
 
 // Individual Product Card Component  
 const ProductCard = ({ product, companyInfo }) => {
+  const navigate = useNavigate();
+  
   return (
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       {/* Product Image */}
