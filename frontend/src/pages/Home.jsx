@@ -16,9 +16,9 @@ const Home = () => {
   const { data: testimonials, loading: testimonialsLoading, error: testimonialsError } = useTestimonials();
 
   const quickNavItems = [
-    { title: 'Cars', icon: Car, path: '/products', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
-    { title: 'Spare Parts', icon: Wrench, path: '/products', color: 'bg-secondary/10 text-secondary dark:bg-secondary/20' },
-    { title: 'Machinery', icon: Truck, path: '/products', color: 'bg-primary/10 text-primary dark:bg-primary/20' }
+    { title: 'Cars', icon: Car, path: '/store?category=1', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
+    { title: 'Spare Parts', icon: Wrench, path: '/store?category=2', color: 'bg-secondary/10 text-secondary dark:bg-secondary/20' },
+    { title: 'Machinery', icon: Truck, path: '/store?category=4', color: 'bg-primary/10 text-primary dark:bg-primary/20' }
   ];
 
   // Loading state
