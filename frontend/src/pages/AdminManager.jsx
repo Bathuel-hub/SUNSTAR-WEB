@@ -121,7 +121,7 @@ const AdminManager = () => {
       name: '',
       description: '',
       price: '',
-      image_url: '',
+      image_urls: [],
       is_featured: false,
       is_available: true
     });
