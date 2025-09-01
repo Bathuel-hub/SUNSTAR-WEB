@@ -1,7 +1,7 @@
 import os
 import smtplib
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from jinja2 import Template
 from datetime import datetime
 import logging
@@ -266,13 +266,13 @@ class EmailService:
             html_content = self.create_contact_email_html(inquiry_data)
             
             # Create message
-            msg = MimeMultipart('alternative')
+            msg = MIMEMultipart('alternative')
             msg['From'] = self.sender_email
             msg['To'] = self.recipient_email
             msg['Subject'] = f"🌟 New Customer Inquiry - {inquiry.inquiry_type.title()} - {inquiry.name}"
             
             # Attach HTML
-            html_part = MimeText(html_content, 'html')
+            html_part = MIMEText(html_content, 'html')
             msg.attach(html_part)
             
             # Send email via Gmail SMTP
