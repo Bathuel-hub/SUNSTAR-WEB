@@ -275,28 +275,19 @@ class EmailService:
             html_part = MimeText(html_content, 'html')
             msg.attach(html_part)
             
-            # For now, just log the email (you can enable actual sending by uncommenting below)
-            logger.info("=== 📧 EMAIL WOULD BE SENT ===")
-            logger.info(f"To: {self.recipient_email}")
-            logger.info(f"From: {self.sender_email}")
-            logger.info(f"Subject: New Customer Inquiry - {inquiry.inquiry_type.title()} - {inquiry.name}")
-            logger.info("=== EMAIL CONTENT READY ===")
-            
-            # Uncomment below to enable actual email sending
-            # You'll need to set EMAIL_PASSWORD environment variable
-            """
+            # Send email via Gmail SMTP
             if self.sender_password:
+                logger.info(f"📧 Sending email to {self.recipient_email}")
                 server = smtplib.SMTP(self.smtp_server, self.smtp_port)
                 server.starttls()
                 server.login(self.sender_email, self.sender_password)
                 server.send_message(msg)
                 server.quit()
                 logger.info("✅ Email sent successfully!")
+                return True
             else:
                 logger.warning("⚠️ EMAIL_PASSWORD not set - email not sent")
-            """
-            
-            return True
+                return False
             
         except Exception as e:
             logger.error(f"❌ Failed to send email: {e}")
