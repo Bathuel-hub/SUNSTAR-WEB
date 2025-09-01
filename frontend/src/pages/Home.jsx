@@ -82,14 +82,14 @@ const Home = () => {
               <Button 
                 size="lg" 
                 className="bg-primary hover:bg-primary/90 text-lg px-8"
-                onClick={() => contactActions.requestQuote(companyInfo?.contact?.email || 'info@sunstarintl.ae')}
+                onClick={() => navigate('/contact', { state: { productName: 'General Inquiry', inquiryType: 'general' } })}
               >
                 Request Quote
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Link to="/products">
+              <Link to="/store">
                 <Button variant="outline" size="lg" className="text-lg px-8 border-foreground text-foreground hover:bg-foreground hover:text-background">
-                  View Products
+                  View Store
                 </Button>
               </Link>
             </div>
