@@ -74,8 +74,8 @@ async def initialize_database():
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow()
         }
-        await company_collection.insert_one(company_data)
-        logger.info("Company information initialized")
+    await company_collection.insert_one(company_data)
+    logger.info("Company information initialized")
 
     # Product Categories
     categories_collection = db.product_categories
