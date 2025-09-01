@@ -13,11 +13,20 @@ import { contactActions } from '../utils/contactUtils';
 
 const Store = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const { data: categories } = useProductCategories();
   const { data: companyInfo } = useCompanyInfo();
+
+  // Read category from URL parameters
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      setSelectedCategory(categoryFromUrl);
+    }
+  }, [searchParams]);
 
   const categoryIcons = {
     1: Car,
