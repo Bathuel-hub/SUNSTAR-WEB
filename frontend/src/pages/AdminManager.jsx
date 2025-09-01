@@ -154,22 +154,52 @@ const AdminManager = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Product Manager</h1>
-            <p className="text-muted-foreground">Manage your product catalog</p>
+    <div className="min-h-screen bg-background">
+      {/* Simple Header Bar */}
+      <div className="bg-card border-b border-border p-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="text-primary hover:text-primary/80 transition-colors">
+              <Home className="h-6 w-6" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">🏪 Store Manager</h1>
+              <p className="text-sm text-muted-foreground">Add and manage your products</p>
+            </div>
           </div>
-          <Button 
-            onClick={() => setShowAddForm(true)}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Product
-          </Button>
+          <ThemeToggle />
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Welcome Card */}
+        <Card className="mb-8 border-2 border-primary/20">
+          <CardContent className="p-8">
+            <div className="text-center">
+              <Package className="h-12 w-12 text-primary mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to Your Store Manager!</h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                Add new products to show customers what you have in stock
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg"
+                  onClick={() => setShowAddForm(true)}
+                  className="bg-primary hover:bg-primary/90 text-lg px-8"
+                >
+                  <Plus className="mr-2 h-6 w-6" />
+                  Add New Product
+                </Button>
+                <Link to="/gallery">
+                  <Button size="lg" variant="outline" className="text-lg px-8">
+                    <Eye className="mr-2 h-6 w-6" />
+                    View Gallery
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Add/Edit Form */}
         {showAddForm && (
