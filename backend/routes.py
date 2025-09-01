@@ -347,28 +347,17 @@ async def update_admin_product(product_id: str, product: ProductItemCreate):
         logger.error(f"Error updating product: {e}")
         raise HTTPException(status_code=500, detail="Failed to update product")
 
-# Email Functions (Placeholder for now)
-async def send_contact_email(inquiry: ContactInquiry):
-    """Log contact form submission (email functionality can be added later)"""
-    try:
-        # For now, just log the contact form data in a structured format
-        logger.info("=== NEW CONTACT FORM SUBMISSION ===")
-        logger.info(f"Name: {inquiry.name}")
-        logger.info(f"Email: {inquiry.email}")
-        logger.info(f"Phone: {inquiry.phone or 'Not provided'}")
-        logger.info(f"Company: {inquiry.company or 'Not provided'}")
-        logger.info(f"Inquiry Type: {inquiry.inquiry_type}")
-        logger.info(f"Message: {inquiry.message}")
-        logger.info(f"Submitted: {inquiry.created_at}")
-        logger.info(f"IP Address: {inquiry.ip_address}")
-        logger.info("===================================")
-        
-        # TODO: Implement actual email sending with service like SendGrid, Mailgun, etc.
-        
-    except Exception as e:
-        logger.error(f"Failed to log inquiry: {e}")
-
 # Background Tasks
 async def send_inquiry_notification(inquiry: ContactInquiry):
-    """Send email notification for new inquiry"""
-    await send_contact_email(inquiry)
+    """Send email notification for new inquiry using email service"""
+    try:
+        success = await email_service.send_contact_email(inquiry)
+        if success:
+            logger.info(f"✅ Email notification sent for inquiry {inquiry.id}")
+        else:
+            logger.error(f"❌ Failed to send email notification for inquiry {inquiry.id}")
+    except Exception as e:
+        logger.error(f"❌ Error sending inquiry notification: {e}")
+
+# Email Functions (Remove the old placeholder function)
+# The old send_contact_email function is replaced by email_service.send_contact_email
