@@ -7,6 +7,7 @@ import { ArrowRight, Car, Wrench, Truck, Building2, Star, Quote, Loader2 } from 
 import { useCompanyInfo, useProductCategories, useTestimonials } from '../hooks/useApi';
 import { contactActions } from '../utils/contactUtils';
 import { heroImage } from '../mock';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const { data: companyInfo, loading: companyLoading, error: companyError } = useCompanyInfo();
