@@ -1165,16 +1165,47 @@ class EmailServiceTester:
 
 async def main():
     """Main test execution"""
-    tester = EmailServiceTester()
+    print("🔧 Sun Star International Backend Test Suite")
+    print("=" * 80)
     
+    # Run File Upload Tests
+    file_tester = FileUploadTester()
     try:
-        passed, total = await tester.run_all_tests()
+        file_passed, file_total = await file_tester.run_file_upload_tests()
+        
+        print("\n" + "=" * 80)
+        
+        # Run Email Service Tests
+        email_tester = EmailServiceTester()
+        email_passed, email_total = await email_tester.run_all_tests()
+        
+        # Combined Summary
+        total_passed = file_passed + email_passed
+        total_tests = file_total + email_total
+        
+        print("\n🎯 OVERALL TEST SUMMARY")
+        print("=" * 80)
+        print(f"File Upload Tests: {file_passed}/{file_total} passed")
+        print(f"Email Service Tests: {email_passed}/{email_total} passed")
+        print(f"Total Tests: {total_passed}/{total_tests} passed")
+        print(f"Overall Success Rate: {total_passed/total_tests:.1%}")
         
         # Print detailed results
         print("\n📋 DETAILED TEST RESULTS")
-        print("=" * 60)
+        print("=" * 80)
         
-        for result in tester.test_results:
+        print("\n🔧 File Upload Test Results:")
+        for result in file_tester.test_results:
+            status = "✅" if result["success"] else "❌"
+            print(f"{status} {result['test']}: {result['message']}")
+            
+            if result["details"]:
+                for key, value in result["details"].items():
+                    print(f"    {key}: {value}")
+            print()
+        
+        print("\n📧 Email Service Test Results:")
+        for result in email_tester.test_results:
             status = "✅" if result["success"] else "❌"
             print(f"{status} {result['test']}: {result['message']}")
             
@@ -1184,7 +1215,7 @@ async def main():
             print()
         
         # Exit with appropriate code
-        sys.exit(0 if passed == total else 1)
+        sys.exit(0 if total_passed == total_tests else 1)
         
     except KeyboardInterrupt:
         print("\n⚠️ Tests interrupted by user")
