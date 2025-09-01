@@ -352,34 +352,39 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              {/* Map Placeholder */}
+              {/* Location Information */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-blue-600" />
-                    Find Us
+                    <MapPin className="h-5 w-5 text-primary" />
+                    Our Location
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-slate-200 h-64 rounded-lg flex items-center justify-center">
-                    <div className="text-center text-slate-600">
-                      <MapPin className="h-12 w-12 mx-auto mb-4" />
-                      <div className="font-medium">Interactive Map</div>
-                      <div className="text-sm">Al Hulaila Industrial Zone</div>
-                      <div className="text-sm">Ras Al Khaimah, UAE</div>
+                  <div className="space-y-3 text-muted-foreground">
+                    <div>
+                      <div className="font-semibold text-foreground mb-1">Business Address:</div>
+                      <div>{companyInfo?.address?.building}</div>
+                      <div>{companyInfo?.address?.zone}</div>
+                      <div>{companyInfo?.address?.city}, {companyInfo?.address?.country}</div>
+                    </div>
+                    
+                    <div className="pt-3 border-t border-border">
+                      <div className="font-semibold text-foreground mb-2">Directions:</div>
+                      <div className="text-sm">
+                        Located in the Al Hulaila Industrial Zone, RAK UAE. 
+                        Easily accessible via major highways and close to RAK port facilities.
+                      </div>
+                    </div>
+                    
+                    <div className="pt-3 border-t border-border">
+                      <div className="font-semibold text-foreground mb-2">Business Hours:</div>
+                      <div className="text-sm space-y-1">
+                        <div>Sunday - Thursday: 8:00 AM - 6:00 PM</div>
+                        <div>Friday - Saturday: 9:00 AM - 4:00 PM</div>
+                      </div>
                     </div>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full mt-4"
-                    onClick={() => {
-                      const address = encodeURIComponent(`${companyInfo?.address?.building}, ${companyInfo?.address?.zone}, ${companyInfo?.address?.city}, ${companyInfo?.address?.country}` || 'Al Hulaila Industrial Zone, Ras Al Khaimah, UAE');
-                      window.open(`https://maps.google.com/maps?q=${address}`, '_blank');
-                    }}
-                  >
-                    <Globe className="mr-2 h-4 w-4" />
-                    Open in Google Maps
-                  </Button>
                 </CardContent>
               </Card>
             </div>
