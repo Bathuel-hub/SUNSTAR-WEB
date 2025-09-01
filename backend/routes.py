@@ -11,6 +11,7 @@ from models import (
     Testimonial, Advantage, SuccessResponse, ErrorResponse, CustomerRating, 
     CustomerRatingCreate, ProductItem, ProductItemCreate
 )
+from email_service import email_service
 
 logger = logging.getLogger(__name__)
 
