@@ -530,12 +530,12 @@ const AdminManager = () => {
                     type="submit" 
                     size="lg"
                     className="bg-primary hover:bg-primary/90 text-lg px-8"
-                    disabled={!formData.name || !formData.description || !formData.price || !formData.category_id || !formData.image_url || uploading}
+                    disabled={!formData.name || !formData.description || !formData.price || !formData.category_id || formData.image_urls.length === 0 || uploading}
                   >
                     {uploading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Uploading Image...
+                        Uploading Images...
                       </>
                     ) : (
                       <>
@@ -548,10 +548,10 @@ const AdminManager = () => {
                     ❌ Cancel
                   </Button>
                   
-                  {(!formData.image_url && !uploading) && (
+                  {(formData.image_urls.length === 0 && !uploading) && (
                     <div className="flex items-center gap-2 text-sm text-red-600">
                       <AlertCircle className="h-4 w-4" />
-                      <span>Image upload is required to save product</span>
+                      <span>At least one image is required to save product</span>
                     </div>
                   )}
                 </div>
