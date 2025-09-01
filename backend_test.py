@@ -24,6 +24,7 @@ class FileUploadTester:
         self.session = None
         self.test_results = []
         self.uploaded_files = []  # Track uploaded files for cleanup
+        self.bulk_uploaded_files = []  # Track bulk uploaded files for cleanup
         
     async def setup(self):
         """Setup test session"""
