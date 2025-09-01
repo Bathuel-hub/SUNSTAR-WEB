@@ -56,7 +56,7 @@ async def initialize_database():
             "address": {
                 "building": "VVIPR1315, Compass building - Al Hulaila",
                 "zone": "AL Hulaila Industrial Zone-FZ",
-                "city": "Ras Al Khaimah",
+                "city": "RAK UAE",
                 "country": "United Arab Emirates"
             },
             "contact": {
