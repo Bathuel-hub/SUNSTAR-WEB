@@ -380,8 +380,8 @@ async def upload_image(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             buffer.write(content)
         
-        # Return file URL (in production, you'd use a CDN or cloud storage)
-        file_url = f"/uploads/{unique_filename}"
+        # Return file URL (use /api/uploads/ path to ensure proper routing)
+        file_url = f"/api/uploads/{unique_filename}"
         
         logger.info(f"File uploaded successfully: {unique_filename}")
         
