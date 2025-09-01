@@ -203,7 +203,24 @@ const ProductCard = ({ product, companyInfo }) => {
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       {/* Product Image */}
       <div className="relative h-48 overflow-hidden">
-        {product.image_url ? (
+        {product.image_urls && product.image_urls.length > 0 ? (
+          <div className="relative w-full h-full">
+            <img
+              src={product.image_urls[0]}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            {/* Multiple images indicator */}
+            {product.image_urls.length > 1 && (
+              <div className="absolute top-3 left-3">
+                <Badge variant="secondary" className="bg-black/70 text-white text-xs">
+                  +{product.image_urls.length - 1} more
+                </Badge>
+              </div>
+            )}
+          </div>
+        ) : product.image_url ? (
+          // Backward compatibility for old single image format
           <img
             src={product.image_url}
             alt={product.name}
