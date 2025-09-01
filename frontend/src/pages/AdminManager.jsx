@@ -130,18 +130,24 @@ const AdminManager = () => {
   };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+    // Validate all files first
+    const invalidFiles = files.filter(file => !file.type.startsWith('image/'));
+    if (invalidFiles.length > 0) {
+      alert(`Please select only image files. Invalid files: ${invalidFiles.map(f => f.name).join(', ')}`);
       return;
     }
 
-    // Validate file size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+    const oversizedFiles = files.filter(file => file.size > 5 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      alert(`Files must be less than 5MB. Oversized files: ${oversizedFiles.map(f => f.name).join(', ')}`);
+      return;
+    }
+
+    if (files.length > 10) {
+      alert('Maximum 10 images allowed per product');
       return;
     }
 
@@ -156,24 +162,37 @@ const AdminManager = () => {
             clearInterval(progressInterval);
             return 90;
           }
-          return prev + Math.random() * 20;
+          return prev + Math.random() * 15;
         });
-      }, 100);
+      }, 150);
 
       const formDataUpload = new FormData();
-      formDataUpload.append('file', file);
+      files.forEach(file => {
+        formDataUpload.append('files', file);
+      });
 
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/upload/image`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/upload/images`, {
         method: 'POST',
         body: formDataUpload,
       });
 
       if (response.ok) {
         const result = await response.json();
-        const imageUrl = `${process.env.REACT_APP_BACKEND_URL}${result.data.file_url}`;
+        const uploadedFiles = result.data.uploaded_files || [];
+        const imageUrls = uploadedFiles.map(file => `${process.env.REACT_APP_BACKEND_URL}${file.file_url}`);
         
-        setFormData(prev => ({ ...prev, image_url: imageUrl }));
+        // Add new images to existing ones
+        setFormData(prev => ({ 
+          ...prev, 
+          image_urls: [...prev.image_urls, ...imageUrls] 
+        }));
+        
         setUploadProgress(100);
+        
+        // Show success message
+        if (result.data.errors && result.data.errors.length > 0) {
+          alert(`${uploadedFiles.length} images uploaded successfully.\nErrors: ${result.data.errors.join(', ')}`);
+        }
         
         // Clear progress after a short delay
         setTimeout(() => {
@@ -185,10 +204,17 @@ const AdminManager = () => {
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Failed to upload image. Please try again.');
+      alert('Failed to upload images. Please try again.');
       setUploading(false);
       setUploadProgress(0);
     }
+  };
+
+  const removeImage = (indexToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      image_urls: prev.image_urls.filter((_, index) => index !== indexToRemove)
+    }));
   };
 
   const getCategoryName = (categoryId) => {
