@@ -56,9 +56,8 @@ const Store = () => {
       setProducts(allProducts);
     } catch (error) {
       console.error('Failed to load products:', error);
-      // Fall back to sample products
-      const allSamples = Object.values(sampleProducts).flat();
-      setProducts(allSamples);
+      // No fallback - just show empty state
+      setProducts([]);
     } finally {
       setLoading(false);
     }
