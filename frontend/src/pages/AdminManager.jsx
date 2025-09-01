@@ -190,10 +190,10 @@ const AdminManager = () => {
                   <Plus className="mr-2 h-6 w-6" />
                   Add New Product
                 </Button>
-                <Link to="/gallery">
+                <Link to="/store">
                   <Button size="lg" variant="outline" className="text-lg px-8">
                     <Eye className="mr-2 h-6 w-6" />
-                    View Gallery
+                    View Store
                   </Button>
                 </Link>
               </div>
