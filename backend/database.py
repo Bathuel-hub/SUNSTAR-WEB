@@ -45,7 +45,8 @@ async def initialize_database():
     
     # Company Information
     company_collection = db.company_info
-    if await company_collection.count_documents({}) == 0:
+    # Always update to ensure latest contact info
+    await company_collection.delete_many({})  # Clear existing data
         company_data = {
             "name": "SUN STAR INTERNATIONAL FZ-LLC",
             "license_no": "5034384",
