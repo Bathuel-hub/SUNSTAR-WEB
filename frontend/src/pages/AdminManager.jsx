@@ -108,7 +108,7 @@ const AdminManager = () => {
       name: product.name,
       description: product.description,
       price: product.price,
-      image_url: product.image_url || '',
+      image_urls: product.image_urls || [], // Handle both old and new formats
       is_featured: product.is_featured,
       is_available: product.is_available
     });
