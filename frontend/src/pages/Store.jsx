@@ -123,13 +123,13 @@ const Store = () => {
                   </TabsTrigger>
                   
                   {categories?.map((category, index) => {
-                    const IconComponent = categoryIcons[index + 1] || Package;
-                    const categoryProducts = getProductsByCategory((index + 1).toString());
+                    const IconComponent = categoryIcons[category.id] || categoryIcons[index + 1] || Package;
+                    const categoryProducts = getProductsByCategory(category.id);
                     
                     return (
                       <TabsTrigger
-                        key={index}
-                        value={(index + 1).toString()}
+                        key={category.id}
+                        value={category.id}
                         className="w-full justify-start p-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                       >
                         <IconComponent className="mr-3 h-5 w-5" />
