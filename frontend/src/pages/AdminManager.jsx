@@ -384,85 +384,104 @@ const AdminManager = () => {
           </Card>
         )}
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              {product.image_url ? (
-                <div className="h-48 bg-muted">
-                  <img 
-                    src={product.image_url} 
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="h-48 bg-muted flex items-center justify-center">
-                  <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                </div>
-              )}
-              
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-foreground truncate">{product.name}</h3>
-                  {product.is_featured && (
-                    <Badge className="bg-secondary text-secondary-foreground">Featured</Badge>
-                  )}
-                </div>
-                
-                <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                  {product.description}
-                </p>
-                
-                <div className="flex items-center gap-2 mb-3">
-                  <DollarSign className="h-4 w-4 text-primary" />
-                  <span className="font-medium text-foreground">{product.price}</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-muted-foreground">
-                    {getCategoryName(product.category_id)}
+        {/* Your Products */}
+        {products.length > 0 && (
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
+              📦 Your Products ({products.length})
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {products.map((product) => (
+                <Card key={product.id} className="overflow-hidden border-2 hover:border-primary/30 transition-all">
+                  <div className="flex">
+                    {/* Product Image */}
+                    <div className="w-1/3 h-32">
+                      {product.image_url ? (
+                        <img 
+                          src={product.image_url} 
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Product Info */}
+                    <CardContent className="flex-1 p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-bold text-foreground text-lg">{product.name}</h3>
+                        <div className="flex gap-1">
+                          {product.is_featured && (
+                            <Badge className="bg-secondary text-secondary-foreground text-xs">
+                              ⭐ Featured
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                        {product.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="font-bold text-primary text-lg">
+                          {product.price}
+                        </div>
+                        <Badge variant={product.is_available ? "default" : "secondary"}>
+                          {product.is_available ? '✅ Available' : '❌ Sold Out'}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(product)}
+                          className="flex-1"
+                        >
+                          <Edit2 className="mr-2 h-4 w-4" />
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleDelete(product.id)}
+                          className="text-red-600 hover:text-red-700 hover:border-red-300"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </Button>
+                      </div>
+                    </CardContent>
                   </div>
-                  
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEdit(product)}
-                    >
-                      <Edit2 className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDelete(product.id)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="mt-2 flex gap-2">
-                  <Badge variant={product.is_available ? "default" : "secondary"}>
-                    {product.is_available ? 'Available' : 'Unavailable'}
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {products.length === 0 && (
-          <div className="text-center py-12">
-            <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">No products yet</h3>
-            <p className="text-muted-foreground mb-4">Start by adding your first product to the catalog</p>
-            <Button onClick={() => setShowAddForm(true)} className="bg-primary hover:bg-primary/90">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Your First Product
-            </Button>
+                </Card>
+              ))}
+            </div>
           </div>
+        )}
+
+        {/* Empty State */}
+        {products.length === 0 && !showAddForm && (
+          <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
+            <CardContent className="p-12 text-center">
+              <Package className="h-20 w-20 text-primary mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-foreground mb-3">No products added yet</h3>
+              <p className="text-lg text-muted-foreground mb-6 max-w-md mx-auto">
+                Start building your product catalog! Add your first product to show customers what you have available.
+              </p>
+              <Button 
+                size="lg"
+                onClick={() => setShowAddForm(true)} 
+                className="bg-primary hover:bg-primary/90 text-lg px-8"
+              >
+                <Plus className="mr-2 h-6 w-6" />
+                Add Your First Product
+              </Button>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
