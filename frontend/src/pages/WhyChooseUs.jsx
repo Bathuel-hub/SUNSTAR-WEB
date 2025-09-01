@@ -23,10 +23,10 @@ const WhyChooseUs = () => {
   ];
 
   const stats = [
-    { number: '500+', label: 'Vehicles Traded', icon: Package },
-    { number: '1000+', label: 'Parts Delivered', icon: Truck },
-    { number: '25+', label: 'Countries Served', icon: Globe },
-    { number: '99%', label: 'Client Satisfaction', icon: Star }
+    { number: '2025', label: 'Established', icon: Award },
+    { number: 'RAKEZ', label: 'Licensed', icon: Shield },
+    { number: '4', label: 'Product Categories', icon: Package },
+    { number: '24/7', label: 'Support Available', icon: Star }
   ];
 
   return (
