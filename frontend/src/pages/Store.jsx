@@ -352,10 +352,14 @@ const ProductCard = ({ product, companyInfo }) => {
         <div className="flex gap-2">
           <Button 
             className="flex-1 bg-primary hover:bg-primary/90"
-            onClick={() => contactActions.requestQuote(
-              companyInfo?.contact?.email || 'sunstarintl.ae@gmail.com',
-              `${product.category_name} - ${product.name}`
-            )}
+            onClick={() => navigate('/contact', { 
+              state: { 
+                productName: product.name,
+                productCategory: product.category_name,
+                inquiryType: 'product_inquiry',
+                productPrice: product.price
+              } 
+            })}
           >
             <Mail className="mr-2 h-4 w-4" />
             Get Quote
