@@ -60,10 +60,10 @@ async def initialize_database():
                 "country": "United Arab Emirates"
             },
             "contact": {
-                "phoneUAE": "+971-XXX-XXXXXX",
+                "phoneUAE": "+971551849702",
                 "phoneEthiopia": "+251-911373857",
-                "email": "info@sunstarintl.ae",
-                "whatsapp": "+971-XXX-XXXXXX"
+                "email": "sunstarintl.ae@gmail.com",
+                "whatsapp": "+971551849702"
             },
             "license": {
                 "issueDate": "11-08-2025",
